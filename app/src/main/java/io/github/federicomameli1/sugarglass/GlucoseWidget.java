@@ -49,7 +49,9 @@ public class GlucoseWidget extends AppWidgetProvider {
     }
 
     private static RemoteViews render(Context base, Bundle options) {
-        Context context = GlucoseService.localized(base);
+        // From the application context: it follows light/dark switches, while the service's own
+        // localized context is a snapshot taken when it started
+        Context context = GlucoseService.localized(base.getApplicationContext());
         // Portrait cell size: MIN_WIDTH is the portrait width, MAX_HEIGHT the portrait height
         int widthDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), 40);
         int heightDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT), 40);

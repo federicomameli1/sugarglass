@@ -142,6 +142,12 @@ public class GlucoseService extends Service {
     }
 
     @Override
+    public void onConfigurationChanged(Configuration changed) {
+        super.onConfigurationChanged(changed);
+        GlucoseWidget.updateAll(this); // light/dark switched: the colours set from code have to follow now
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler.removeCallbacks(poll);
         handler.post(poll); // fetch now, e.g. right after the settings changed

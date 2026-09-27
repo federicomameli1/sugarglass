@@ -2,7 +2,18 @@
 
 A tiny Android app that shows your glucose from **Nightscout** as a glass-style home screen widget, a persistent notification and a number in the status bar. Nothing else.
 
-<!-- screenshots: add widget (light and dark), home screen and notification to docs/ and link them here -->
+<p align="center">
+  <img src="docs/widget-dark.jpg" width="380" alt="Widget in dark mode, 101 steady, over a blurred 3-hour line and a green glow">
+  <img src="docs/widget-light.jpg" width="380" alt="The same widget in light mode">
+</p>
+<p align="center">
+  <img src="docs/status-bar.jpg" width="380" alt="Glucose value next to the clock in the status bar">
+  <img src="docs/notification.jpg" width="380" alt="Persistent notification: 133, rising, +6, 1 min ago">
+</p>
+<p align="center">
+  <img src="docs/home.jpg" width="260" alt="App home: large value, trend and the last 3 hours">
+  <img src="docs/settings.jpg" width="260" alt="Settings: Nightscout, units, ranges, glow intensity, language">
+</p>
 
 ## What it does
 
