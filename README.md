@@ -37,9 +37,16 @@ What it deliberately does **not** do: alarms, treatments, uploading, statistics.
 3. Allow notifications and let it **ignore battery optimisation**: without that Android may stop it.
 4. Long-press the home screen and add the Sugarglass widget.
 
-### Xiaomi / HyperOS / MIUI, Samsung, Huawei, OnePlus
+### If the widget stops updating
 
-These systems kill background apps aggressively. Also turn on **Autostart**, set battery to **No restrictions**, and lock the app in the recents screen. See [dontkillmyapp.com](https://dontkillmyapp.com) for your phone.
+Some phones close background apps even after step 3. Menu names change between versions, so look for the closest match:
+
+- **Xiaomi, Redmi, POCO (HyperOS):** long-press the app icon → App info → turn on **Autostart**, and under **Battery saver** choose **No restrictions**. Then open the recent apps, long-press Sugarglass and **lock** it.
+- **Samsung (One UI):** Settings → Apps → Sugarglass → Battery → **Unrestricted**. Also Settings → Battery → Background usage limits: make sure Sugarglass isn't under sleeping apps.
+- **OnePlus, Oppo, Realme (ColorOS, OxygenOS):** App info → Battery usage → allow **background activity** and **auto launch**.
+- **Pixel and most other phones:** step 3 is enough.
+
+Tested on HyperOS only so far; if the steps for your phone differ, please open an issue. For other brands, [dontkillmyapp.com](https://dontkillmyapp.com) is older but still has pointers.
 
 ## Privacy
 
