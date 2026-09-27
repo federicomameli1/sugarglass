@@ -6,6 +6,9 @@ A tiny Android app that shows your glucose from **Nightscout** as a glass-style 
   <img src="docs/widgets.png" width="760" alt="The widget in dark and light mode: glucose value and trend arrow over a 3-hour line that blurs behind the number, with a green glow for in range">
 </p>
 
+<h3 align="center"><a href="https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk">⬇ Download Sugarglass for Android</a></h3>
+<p align="center">Latest version, about 40 KB. Open this page on your phone and tap the link. <a href="#install">How to install</a></p>
+
 ## What it does
 
 - **Widget, any size.** 1x1 shows the value; 2x1 and wider add the last 3 hours as a line, blurred where it passes behind the number. A soft glow from the bottom turns green, yellow or red with your range.
@@ -29,7 +32,7 @@ What it deliberately does **not** do: alarms, treatments, uploading, statistics.
 
 ## Install
 
-1. Download the latest `sugarglass-x.y.z.apk` from [Releases](../../releases) and open it on your phone.
+1. On your phone, [download the APK](https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk) and open it. Android will ask you to **allow installing apps** from your browser or file manager the first time: allow it, then tap **Install**. If Google Play Protect warns that the app comes from an unknown developer, that is because it isn't on the Play Store: tap **More details → Install anyway**. Updates install the same way, over the old version, and keep your settings.
 2. Open Sugarglass, enter your Nightscout address and, if your site is not public, a token (recommended, with the `readable` role) or your API secret. Tap **Save and start**.
 3. Allow notifications and let it **ignore battery optimisation**: without that Android may stop it.
 4. Long-press the home screen and add the Sugarglass widget.
