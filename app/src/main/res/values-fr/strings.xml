@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glycémie</string>
+    <string name="nightscout_url">Adresse Nightscout</string>
+    <string name="nightscout_secret">Jeton ou API secret (vide si votre site est public)</string>
+    <string name="units">Unités</string>
+    <string name="ranges">Seuils</string>
+    <string name="urgent_low">Bas urgent</string>
+    <string name="low">Bas</string>
+    <string name="high">Haut</string>
+    <string name="urgent_high">Haut urgent</string>
+    <string name="ranges_invalid">Les seuils doivent être croissants : bas urgent, bas, haut, haut urgent</string>
+    <string name="save">Enregistrer et démarrer</string>
+    <string name="settings">Réglages</string>
+    <string name="last_3h">3 dernières heures</string>
+    <string name="now">maintenant</string>
+    <string name="minutes_ago">il y a %d min</string>
+    <string name="status_waiting">Pas encore de données</string>
+    <string name="status_updated">Mis à jour à %1$s, %2$d mesures sur les 3 dernières heures</string>
+    <string name="status_error">Erreur : %s</string>
+    <string name="status_not_started">Service non démarré : %s</string>
+    <string name="status_updating">Mise à jour…</string>
+    <string name="error_no_url">adresse Nightscout manquante</string>
+    <string name="error_http">Nightscout a répondu HTTP %d</string>
+    <string name="disclaimer">Ce n\'est pas un dispositif médical. Ne l\'utilisez pas pour décider d\'un traitement.</string>
+    <string name="language">Langue</string>
+    <string name="system_language">Langue du système</string>
+    <string name="glow">Intensité du halo</string>
+</resources>

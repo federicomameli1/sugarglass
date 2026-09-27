@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_primary">#FF1C1C1E</color>
+    <color name="text_secondary">#991C1C1E</color>
+    <color name="line">#D91C1C1E</color>
+    <color name="background">#FFF2F2F7</color>
+    <color name="range_ok">#FF34C759</color>
+    <color name="range_warn">#FFFF9F0A</color>
+    <color name="range_urgent">#FFFF3B30</color>
+    <color name="stale">#FF8E8E93</color>
+</resources>

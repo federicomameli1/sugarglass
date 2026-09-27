@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glukose</string>
+    <string name="nightscout_url">Nightscout-Adresse</string>
+    <string name="nightscout_secret">Token oder API-Secret (leer lassen, wenn deine Seite öffentlich ist)</string>
+    <string name="units">Einheit</string>
+    <string name="ranges">Grenzwerte</string>
+    <string name="urgent_low">Kritisch niedrig</string>
+    <string name="low">Niedrig</string>
+    <string name="high">Hoch</string>
+    <string name="urgent_high">Kritisch hoch</string>
+    <string name="ranges_invalid">Die Grenzwerte müssen aufsteigen: kritisch niedrig, niedrig, hoch, kritisch hoch</string>
+    <string name="save">Speichern und starten</string>
+    <string name="settings">Einstellungen</string>
+    <string name="last_3h">Letzte 3 Stunden</string>
+    <string name="now">jetzt</string>
+    <string name="minutes_ago">vor %d Min.</string>
+    <string name="status_waiting">Noch keine Daten</string>
+    <string name="status_updated">Aktualisiert um %1$s, %2$d Werte in den letzten 3 Stunden</string>
+    <string name="status_error">Fehler: %s</string>
+    <string name="status_not_started">Dienst nicht gestartet: %s</string>
+    <string name="status_updating">Wird aktualisiert…</string>
+    <string name="error_no_url">Nightscout-Adresse fehlt</string>
+    <string name="error_http">Nightscout antwortet mit HTTP %d</string>
+    <string name="disclaimer">Kein Medizinprodukt. Nicht für Therapieentscheidungen verwenden.</string>
+    <string name="language">Sprache</string>
+    <string name="system_language">Systemsprache</string>
+    <string name="glow">Stärke des Leuchtens</string>
+</resources>

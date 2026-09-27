@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glucosa</string>
+    <string name="nightscout_url">Dirección de Nightscout</string>
+    <string name="nightscout_secret">Token o API secret (vacío si tu sitio es público)</string>
+    <string name="units">Unidades</string>
+    <string name="ranges">Rangos</string>
+    <string name="urgent_low">Baja urgente</string>
+    <string name="low">Baja</string>
+    <string name="high">Alta</string>
+    <string name="urgent_high">Alta urgente</string>
+    <string name="ranges_invalid">Los rangos deben ir en aumento: baja urgente, baja, alta, alta urgente</string>
+    <string name="save">Guardar e iniciar</string>
+    <string name="settings">Ajustes</string>
+    <string name="last_3h">Últimas 3 horas</string>
+    <string name="now">ahora</string>
+    <string name="minutes_ago">hace %d min</string>
+    <string name="status_waiting">Todavía no hay datos</string>
+    <string name="status_updated">Actualizado a las %1$s, %2$d lecturas en las últimas 3 horas</string>
+    <string name="status_error">Error: %s</string>
+    <string name="status_not_started">Servicio no iniciado: %s</string>
+    <string name="status_updating">Actualizando…</string>
+    <string name="error_no_url">falta la dirección de Nightscout</string>
+    <string name="error_http">Nightscout respondió HTTP %d</string>
+    <string name="disclaimer">No es un dispositivo médico. No la uses para tomar decisiones de tratamiento.</string>
+    <string name="language">Idioma</string>
+    <string name="system_language">Idioma del sistema</string>
+    <string name="glow">Intensidad del halo</string>
+</resources>

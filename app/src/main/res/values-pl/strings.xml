@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glukoza</string>
+    <string name="nightscout_url">Adres Nightscout</string>
+    <string name="nightscout_secret">Token lub API secret (puste, jeśli strona jest publiczna)</string>
+    <string name="units">Jednostki</string>
+    <string name="ranges">Progi</string>
+    <string name="urgent_low">Pilnie niski</string>
+    <string name="low">Niski</string>
+    <string name="high">Wysoki</string>
+    <string name="urgent_high">Pilnie wysoki</string>
+    <string name="ranges_invalid">Progi muszą rosnąć: pilnie niski, niski, wysoki, pilnie wysoki</string>
+    <string name="save">Zapisz i uruchom</string>
+    <string name="settings">Ustawienia</string>
+    <string name="last_3h">Ostatnie 3 godziny</string>
+    <string name="now">teraz</string>
+    <string name="minutes_ago">%d min temu</string>
+    <string name="status_waiting">Brak danych</string>
+    <string name="status_updated">Zaktualizowano o %1$s, odczyty z ostatnich 3 godzin: %2$d</string>
+    <string name="status_error">Błąd: %s</string>
+    <string name="status_not_started">Usługa nie została uruchomiona: %s</string>
+    <string name="status_updating">Aktualizowanie…</string>
+    <string name="error_no_url">brak adresu Nightscout</string>
+    <string name="error_http">Nightscout odpowiedział HTTP %d</string>
+    <string name="disclaimer">To nie jest wyrób medyczny. Nie używaj go do podejmowania decyzji o leczeniu.</string>
+    <string name="language">Język</string>
+    <string name="system_language">Język systemu</string>
+    <string name="glow">Intensywność poświaty</string>
+</resources>

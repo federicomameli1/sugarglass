@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glicemia</string>
+    <string name="nightscout_url">Indirizzo Nightscout</string>
+    <string name="nightscout_secret">Token o API secret (vuoto se il sito è pubblico)</string>
+    <string name="units">Unità</string>
+    <string name="ranges">Soglie</string>
+    <string name="urgent_low">Bassa urgente</string>
+    <string name="low">Bassa</string>
+    <string name="high">Alta</string>
+    <string name="urgent_high">Alta urgente</string>
+    <string name="ranges_invalid">Le soglie devono crescere: bassa urgente, bassa, alta, alta urgente</string>
+    <string name="save">Salva e avvia</string>
+    <string name="settings">Impostazioni</string>
+    <string name="last_3h">Ultime 3 ore</string>
+    <string name="now">ora</string>
+    <string name="minutes_ago">%d min fa</string>
+    <string name="status_waiting">Nessun dato ancora</string>
+    <string name="status_updated">Aggiornato alle %1$s, %2$d letture nelle ultime 3 ore</string>
+    <string name="status_error">Errore: %s</string>
+    <string name="status_not_started">Servizio non avviato: %s</string>
+    <string name="status_updating">Aggiornamento in corso…</string>
+    <string name="error_no_url">manca l\'indirizzo di Nightscout</string>
+    <string name="error_http">Nightscout risponde HTTP %d</string>
+    <string name="disclaimer">Non è un dispositivo medico. Non usarla per decidere terapie.</string>
+    <string name="language">Lingua</string>
+    <string name="system_language">Lingua del sistema</string>
+    <string name="glow">Intensità alone</string>
+</resources>

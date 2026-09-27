@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glicose</string>
+    <string name="nightscout_url">Endereço do Nightscout</string>
+    <string name="nightscout_secret">Token ou API secret (vazio se o site for público)</string>
+    <string name="units">Unidades</string>
+    <string name="ranges">Faixas</string>
+    <string name="urgent_low">Baixa urgente</string>
+    <string name="low">Baixa</string>
+    <string name="high">Alta</string>
+    <string name="urgent_high">Alta urgente</string>
+    <string name="ranges_invalid">As faixas devem ser crescentes: baixa urgente, baixa, alta, alta urgente</string>
+    <string name="save">Salvar e iniciar</string>
+    <string name="settings">Configurações</string>
+    <string name="last_3h">Últimas 3 horas</string>
+    <string name="now">agora</string>
+    <string name="minutes_ago">há %d min</string>
+    <string name="status_waiting">Ainda sem dados</string>
+    <string name="status_updated">Atualizado às %1$s, %2$d leituras nas últimas 3 horas</string>
+    <string name="status_error">Erro: %s</string>
+    <string name="status_not_started">Serviço não iniciado: %s</string>
+    <string name="status_updating">Atualizando…</string>
+    <string name="error_no_url">falta o endereço do Nightscout</string>
+    <string name="error_http">O Nightscout respondeu HTTP %d</string>
+    <string name="disclaimer">Não é um dispositivo médico. Não use para decidir tratamentos.</string>
+    <string name="language">Idioma</string>
+    <string name="system_language">Idioma do sistema</string>
+    <string name="glow">Intensidade do brilho</string>
+</resources>

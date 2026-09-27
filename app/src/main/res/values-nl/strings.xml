@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Glucose</string>
+    <string name="nightscout_url">Nightscout-adres</string>
+    <string name="nightscout_secret">Token of API secret (leeg als je site openbaar is)</string>
+    <string name="units">Eenheid</string>
+    <string name="ranges">Grenzen</string>
+    <string name="urgent_low">Urgent laag</string>
+    <string name="low">Laag</string>
+    <string name="high">Hoog</string>
+    <string name="urgent_high">Urgent hoog</string>
+    <string name="ranges_invalid">De grenzen moeten oplopen: urgent laag, laag, hoog, urgent hoog</string>
+    <string name="save">Opslaan en starten</string>
+    <string name="settings">Instellingen</string>
+    <string name="last_3h">Laatste 3 uur</string>
+    <string name="now">nu</string>
+    <string name="minutes_ago">%d min geleden</string>
+    <string name="status_waiting">Nog geen gegevens</string>
+    <string name="status_updated">Bijgewerkt om %1$s, %2$d metingen in de laatste 3 uur</string>
+    <string name="status_error">Fout: %s</string>
+    <string name="status_not_started">Service niet gestart: %s</string>
+    <string name="status_updating">Bijwerken…</string>
+    <string name="error_no_url">Nightscout-adres ontbreekt</string>
+    <string name="error_http">Nightscout antwoordde HTTP %d</string>
+    <string name="disclaimer">Geen medisch hulpmiddel. Gebruik het niet om behandelbeslissingen te nemen.</string>
+    <string name="language">Taal</string>
+    <string name="system_language">Systeemtaal</string>
+    <string name="glow">Sterkte van de gloed</string>
+</resources>

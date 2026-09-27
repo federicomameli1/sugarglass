@@ -1,0 +1,64 @@
+package io.github.federicomameli1.sugarglass;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Arrays;
+import java.util.Locale;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class GlucoseTest {
+
+    private static final Glucose.Config MGDL = Glucose.Config.DEFAULT;
+    private static final Glucose.Config MMOL = new Glucose.Config(true, 55, 70, 180, 250);
+
+    @Before
+    public void englishNumbers() {
+        Locale.setDefault(Locale.UK);
+    }
+
+    private static Glucose.Reading at(int minutesAgo, int sgv) {
+        return new Glucose.Reading(1_000_000_000L - minutesAgo * 60_000L, sgv, "Flat");
+    }
+
+    @Test
+    public void deltaIsPerFiveMinutesWhateverTheReadingInterval() {
+        // one reading every 2 minutes, rising 1 mg/dl per minute
+        assertEquals("+5", Glucose.delta(Arrays.asList(at(0, 106), at(2, 104), at(4, 102), at(6, 100)), MGDL));
+    }
+
+    @Test
+    public void deltaSkipsDuplicatesAndGivesUpAcrossGaps() {
+        assertEquals("-10", Glucose.delta(Arrays.asList(at(0, 90), at(0, 90), at(5, 100)), MGDL));
+        assertEquals("", Glucose.delta(Arrays.asList(at(0, 90), at(12, 100)), MGDL));
+        assertEquals("", Glucose.delta(Arrays.asList(at(0, 90)), MGDL));
+    }
+
+    @Test
+    public void mmolShowsOneDecimalAndNeverASignedZero() {
+        assertEquals("7.0", Glucose.value(126, MMOL)); // 6.993
+        assertEquals("+0.3", Glucose.delta(Arrays.asList(at(0, 105), at(5, 100)), MMOL));
+        assertEquals("-0.6", Glucose.delta(Arrays.asList(at(0, 90), at(5, 100)), MMOL));
+        // -1 mg/dl over 6 minutes is -0.046 mmol/L per 5 minutes: must read 0.0, not -0.0
+        assertEquals("0.0", Glucose.delta(Arrays.asList(at(0, 100), at(6, 101)), MMOL));
+    }
+
+    @Test
+    public void bandsEdgesIncluded() {
+        assertEquals(Glucose.URGENT, Glucose.band(54, MGDL));
+        assertEquals(Glucose.OUT_OF_RANGE, Glucose.band(55, MGDL));
+        assertEquals(Glucose.OUT_OF_RANGE, Glucose.band(69, MGDL));
+        assertEquals(Glucose.IN_RANGE, Glucose.band(70, MGDL));
+        assertEquals(Glucose.IN_RANGE, Glucose.band(180, MGDL));
+        assertEquals(Glucose.OUT_OF_RANGE, Glucose.band(250, MGDL));
+        assertEquals(Glucose.URGENT, Glucose.band(251, MGDL));
+    }
+
+    @Test
+    public void thresholdsMustGoUp() {
+        assertFalse(new Glucose.Config(false, 70, 70, 180, 250).valid());
+        assertFalse(new Glucose.Config(false, 55, 190, 180, 250).valid());
+    }
+}
