@@ -26,4 +26,18 @@
     <string name="language">Język</string>
     <string name="system_language">Język systemu</string>
     <string name="glow">Intensywność poświaty</string>
+    <string name="fixed_scale">Stała skala wykresu</string>
+    <string name="widget_look">Wygląd widżetu</string>
+    <string name="look_auto">Automatyczny</string>
+    <string name="look_dark">Ciemny</string>
+    <string name="look_light">Jasny</string>
+    <string name="section_ranges">Jednostki i progi</string>
+    <string name="section_display">Widżet i wykres</string>
+    <string name="scale_bottom">Dół skali</string>
+    <string name="scale_top">Góra skali</string>
+    <string name="scale_invalid">Dół skali musi być poniżej góry</string>
+    <string name="saved">Zapisano</string>
+    <string name="save_short">Zapisz</string>
+    <string name="range_lines">Pokaż linie zakresu docelowego</string>
+    <string name="back">Wstecz</string>
 </resources>

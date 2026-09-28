@@ -1,5 +1,6 @@
 package io.github.federicomameli1.sugarglass;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -54,6 +55,15 @@ public class GlucoseTest {
         assertEquals(Glucose.IN_RANGE, Glucose.band(180, MGDL));
         assertEquals(Glucose.OUT_OF_RANGE, Glucose.band(250, MGDL));
         assertEquals(Glucose.URGENT, Glucose.band(251, MGDL));
+    }
+
+    @Test
+    public void autoScaleAlwaysShowsTheTargetRange() {
+        // all readings inside 100..120: the scale still reaches down to low and up to high
+        assertArrayEquals(new int[]{70, 180}, Glucose.scale(Arrays.asList(at(0, 120), at(5, 100)), MGDL, null));
+        // a spike above high stretches the top, the bottom stays at low
+        assertArrayEquals(new int[]{70, 260}, Glucose.scale(Arrays.asList(at(0, 260), at(5, 100)), MGDL, null));
+        assertArrayEquals(new int[]{60, 250}, Glucose.scale(Arrays.asList(at(0, 400)), MGDL, new int[]{60, 250}));
     }
 
     @Test

@@ -26,4 +26,18 @@
     <string name="language">Langue</string>
     <string name="system_language">Langue du système</string>
     <string name="glow">Intensité du halo</string>
+    <string name="fixed_scale">Échelle du graphique fixe</string>
+    <string name="widget_look">Apparence du widget</string>
+    <string name="look_auto">Automatique</string>
+    <string name="look_dark">Sombre</string>
+    <string name="look_light">Clair</string>
+    <string name="section_ranges">Unités et seuils</string>
+    <string name="section_display">Widget et graphique</string>
+    <string name="scale_bottom">Bas de l\'échelle</string>
+    <string name="scale_top">Haut de l\'échelle</string>
+    <string name="scale_invalid">Le bas de l\'échelle doit être sous le haut</string>
+    <string name="saved">Enregistré</string>
+    <string name="save_short">Enregistrer</string>
+    <string name="range_lines">Afficher les lignes de la plage cible</string>
+    <string name="back">Retour</string>
 </resources>

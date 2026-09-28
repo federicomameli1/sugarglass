@@ -11,11 +11,12 @@ A tiny Android app that shows your glucose from **Nightscout** as a glass-style 
 
 ## What it does
 
-- **Widget, any size.** 1x1 shows the value; 2x1 and wider add the last 3 hours as a line, blurred where it passes behind the number. A soft glow from the bottom turns green, yellow or red with your range.
+- **Widget, any size.** 1x1 shows the value; 2x1 and wider add the last 3 hours as a line, blurred where it passes behind the number and arrow. A soft glow from the bottom turns green, yellow or red with your range.
+- **Readable graph.** Faint dashed lines mark your target range (you can hide them), and the scale either fits your data or stays fixed at a range you choose.
 - **Persistent notification** with value, trend arrow, 5-minute delta and age.
 - **Status bar number**, so you see your glucose without pulling the shade down.
 - **mg/dL or mmol/L**, and your own urgent low / low / high / urgent high ranges.
-- **Light and dark mode**, and on Android 12+ the glass picks up your wallpaper colours (Material You).
+- **Light and dark**: follows the system, or pick one for the widget. On Android 12+ the glass picks up your wallpaper colours (Material You).
 - **Adjustable glow**, from off to vivid.
 - **In English, Italiano, Français, Deutsch, Español, Português, Nederlands and Polski**, following the system or picked in the settings. Translation fixes are very welcome.
 
@@ -33,7 +34,7 @@ What it deliberately does **not** do: alarms, treatments, uploading, statistics.
 ## Install
 
 1. On your phone, [download the APK](https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk) and open it. Android will ask you to **allow installing apps** from your browser or file manager the first time: allow it, then tap **Install**. If Google Play Protect warns that the app comes from an unknown developer, that is because it isn't on the Play Store: tap **More details → Install anyway**. Updates install the same way, over the old version, and keep your settings.
-2. Open Sugarglass, enter your Nightscout address and, if your site is not public, a token (recommended, with the `readable` role) or your API secret. Tap **Save and start**.
+2. Open Sugarglass, enter your Nightscout address and, if your site is not public, a token (recommended, with the `readable` role) or your API secret. Tap **Save and start**. A Nightscout on your home network (`http://192.168.…`) works too.
 3. Allow notifications and let it **ignore battery optimisation**: without that Android may stop it.
 4. Long-press the home screen and add the Sugarglass widget.
 
@@ -65,6 +66,8 @@ JDK 17 and the Android SDK (platform 34).
 ```
 ./gradlew test assembleDebug
 ```
+
+The debug build installs next to the real app as **Sugarglass debug**, and its settings have a Debug page with fake readings: pick any value, trend or a stale reading and see the widget, notification and status bar with it. A prebuilt one is attached to each release.
 
 Release builds are signed with a key kept outside the repo: create `keystore.properties` in the project root with `storeFile`, `storePassword`, `keyAlias` and `keyPassword`, then `./gradlew assembleRelease`.
 

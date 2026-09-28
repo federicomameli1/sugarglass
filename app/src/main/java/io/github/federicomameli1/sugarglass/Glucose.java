@@ -52,13 +52,13 @@ final class Glucose {
 
     static String arrow(String direction) {
         switch (direction) {
-            case "DoubleUp": return "⇈";
+            case "DoubleUp": return "↑↑"; // two single arrows: the ⇈ glyph is thin
             case "SingleUp": return "↑";
             case "FortyFiveUp": return "↗";
             case "Flat": return "→";
             case "FortyFiveDown": return "↘";
             case "SingleDown": return "↓";
-            case "DoubleDown": return "⇊";
+            case "DoubleDown": return "↓↓";
             default: return "";
         }
     }
@@ -90,6 +90,23 @@ final class Glucose {
 
     static long minutesAgo(Reading r, long now) {
         return Math.max(0, (now - r.date) / 60_000);
+    }
+
+    static final int FIXED_MIN = 40, FIXED_MAX = 300; // mg/dl, default fixed graph scale
+
+    /**
+     * Vertical range of the graph, {bottom, top} in mg/dl: the fixed one if given, else fitted to the data
+     * but always including the target range, so the range lines are there to read the curve against.
+     */
+    static int[] scale(List<Reading> r, Config c, int[] fixed) {
+        if (fixed != null) return new int[]{fixed[0], fixed[1]};
+        int min = c.low, max = c.high;
+        for (Reading x : r) {
+            min = Math.min(min, x.sgv);
+            max = Math.max(max, x.sgv);
+        }
+        int pad = Math.max(0, MIN_SPAN - (max - min)) / 2; // quiet data stays flat instead of turning into cliffs
+        return new int[]{min - pad, max + pad};
     }
 
     static boolean stale(Reading r, long now) {

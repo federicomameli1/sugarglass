@@ -27,4 +27,18 @@
     <string name="language">Language</string>
     <string name="system_language">System default</string>
     <string name="glow">Glow intensity</string>
+    <string name="fixed_scale">Fixed graph scale</string>
+    <string name="widget_look">Widget look</string>
+    <string name="look_auto">Automatic</string>
+    <string name="look_dark">Dark</string>
+    <string name="look_light">Light</string>
+    <string name="section_ranges">Units and ranges</string>
+    <string name="section_display">Widget and graph</string>
+    <string name="scale_bottom">Scale bottom</string>
+    <string name="scale_top">Scale top</string>
+    <string name="scale_invalid">The scale bottom must be below its top</string>
+    <string name="saved">Saved</string>
+    <string name="save_short">Save</string>
+    <string name="range_lines">Show target range lines</string>
+    <string name="back">Back</string>
 </resources>

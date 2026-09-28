@@ -26,4 +26,18 @@
     <string name="language">Sprache</string>
     <string name="system_language">Systemsprache</string>
     <string name="glow">Stärke des Leuchtens</string>
+    <string name="fixed_scale">Feste Skala für die Grafik</string>
+    <string name="widget_look">Widget-Aussehen</string>
+    <string name="look_auto">Automatisch</string>
+    <string name="look_dark">Dunkel</string>
+    <string name="look_light">Hell</string>
+    <string name="section_ranges">Einheit und Grenzwerte</string>
+    <string name="section_display">Widget und Grafik</string>
+    <string name="scale_bottom">Skala unten</string>
+    <string name="scale_top">Skala oben</string>
+    <string name="scale_invalid">Skala unten muss unter Skala oben liegen</string>
+    <string name="saved">Gespeichert</string>
+    <string name="save_short">Speichern</string>
+    <string name="range_lines">Linien für den Zielbereich anzeigen</string>
+    <string name="back">Zurück</string>
 </resources>

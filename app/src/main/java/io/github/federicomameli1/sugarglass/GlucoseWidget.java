@@ -51,7 +51,7 @@ public class GlucoseWidget extends AppWidgetProvider {
     private static RemoteViews render(Context base, Bundle options) {
         // From the application context: it follows light/dark switches, while the service's own
         // localized context is a snapshot taken when it started
-        Context context = GlucoseService.localized(base.getApplicationContext());
+        Context context = GlucoseService.themed(GlucoseService.localized(base.getApplicationContext()));
         // Portrait cell size: MIN_WIDTH is the portrait width, MAX_HEIGHT the portrait height
         int widthDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), 40);
         int heightDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT), 40);
@@ -60,6 +60,10 @@ public class GlucoseWidget extends AppWidgetProvider {
         RemoteViews v = new RemoteViews(context.getPackageName(), small ? R.layout.widget_small : R.layout.widget);
         v.setOnClickPendingIntent(android.R.id.background, PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
+        int look = GlucoseService.look(context);
+        // The launcher picks the automatic glass by its own mode; a forced look names its glass outright
+        if (look != GlucoseService.LOOK_AUTO) v.setInt(android.R.id.background, "setBackgroundResource",
+                look == GlucoseService.LOOK_DARK ? R.drawable.glass_dark : R.drawable.glass_light);
         List<Glucose.Reading> r = GlucoseService.readings;
         if (r.isEmpty()) return v; // the layout shows "---"
 
@@ -72,16 +76,19 @@ public class GlucoseWidget extends AppWidgetProvider {
         long minutes = Glucose.minutesAgo(last, now);
         String delta = Glucose.delta(r, c), age = minutes == 0 ? context.getString(R.string.now) : minutes + "m";
 
-        v.setTextViewText(R.id.value, Glucose.value(last.sgv, c));
-        v.setTextColor(R.id.value, stale ? (primary & 0xFFFFFF) | 0x80000000 : primary);
-        v.setTextViewText(R.id.arrow, stale ? "" : Glucose.arrow(last.direction));
-        v.setTextColor(R.id.arrow, hue);
-        v.setTextViewText(R.id.info, small || delta.isEmpty() ? age : delta + " · " + age);
+        String value = Glucose.value(last.sgv, c), info = small || delta.isEmpty() ? age : delta + " · " + age;
+        v.setTextViewText(R.id.info, info);
         v.setTextColor(R.id.info, stale ? context.getColor(R.color.range_warn) : context.getColor(R.color.text_secondary));
 
+        Art.Reading shown = new Art.Reading(value, stale ? "" : last.direction,
+                stale ? (primary & 0xFFFFFF) | 0x80000000 : primary, hue);
         float density = context.getResources().getDisplayMetrics().density;
-        v.setImageViewBitmap(R.id.graph, Art.draw(r, Math.round(widthDp * density), Math.round(heightDp * density),
-                density, now, hue, GlucoseService.glowAlpha(context), context.getColor(R.color.line), !small));
+        v.setImageViewBitmap(R.id.graph, Art.widget(r, shown, Math.round(widthDp * density),
+                Math.round(heightDp * density), density, now, GlucoseService.glowAlpha(context),
+                context.getColor(R.color.line), c, GlucoseService.fixedScale(context),
+                GlucoseService.rangeLines(context), small));
+        // The value and arrow are pixels now, so screen readers get them in words
+        v.setContentDescription(R.id.graph, value + " " + Glucose.arrow(stale ? "" : last.direction) + ", " + info);
         return v;
     }
 }

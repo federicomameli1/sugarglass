@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Icon;
 import android.os.Handler;
@@ -87,6 +88,35 @@ public class GlucoseService extends Service {
         Configuration c = new Configuration(base.getResources().getConfiguration());
         c.setLocale(new Locale(language));
         return base.createConfigurationContext(c);
+    }
+
+    static final int LOOK_AUTO = 0, LOOK_DARK = 1, LOOK_LIGHT = 2;
+
+    /** Widget look chosen in the settings: automatic follows the system's light/dark mode. */
+    static int look(Context context) {
+        return prefs(context).getInt("look", LOOK_AUTO);
+    }
+
+    /** The context in the widget's look, so colours resolved from it match the glass behind them. */
+    static Context themed(Context base) {
+        int look = look(base);
+        if (look == LOOK_AUTO) return base;
+        Configuration c = new Configuration(base.getResources().getConfiguration());
+        c.uiMode = (c.uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
+                | (look == LOOK_DARK ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO);
+        return base.createConfigurationContext(c);
+    }
+
+    /** The graph's fixed {bottom, top} in mg/dl, or null when it fits itself to the data. */
+    static int[] fixedScale(Context context) {
+        SharedPreferences p = prefs(context);
+        return p.getBoolean("fixed_scale", false)
+                ? new int[]{p.getInt("scale_min", Glucose.FIXED_MIN), p.getInt("scale_max", Glucose.FIXED_MAX)}
+                : null;
+    }
+
+    static boolean rangeLines(Context context) {
+        return prefs(context).getBoolean("range_lines", true);
     }
 
     /** Alpha of the range glow, from the slider: 0 to 100, where 50 is the default look. */
@@ -176,7 +206,12 @@ public class GlucoseService extends Service {
     private void refresh() {
         network.execute(() -> {
             try {
-                readings = fetch();
+                SharedPreferences p = prefs(this);
+                // Debug builds only: made-up readings, chosen in the settings, instead of Nightscout
+                readings = BuildConfig.DEBUG && p.getBoolean("fake", false)
+                        ? Fake.series(p.getInt("fake_value", 120), p.getString("fake_direction", "Flat"),
+                                p.getBoolean("fake_stale", false), System.currentTimeMillis())
+                        : fetch();
                 status = getString(R.string.status_updated,
                         DateFormat.getTimeFormat(this).format(new Date()), readings.size());
             } catch (Exception e) { // keep the old readings: their age shows they are getting stale
@@ -256,12 +291,19 @@ public class GlucoseService extends Service {
         p.setColor(0xFFFFFFFF); // the system tints it; only the alpha matters
         p.setTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD));
         p.setTextAlign(Paint.Align.CENTER);
+        // The system shrinks the whole square, so the digits have to fill it to read as big as the clock:
+        // digits 90% of the height, squeezed up to 40% sideways, and only then made smaller to fit
+        Rect digits = new Rect();
         p.setTextSize(size);
+        p.getTextBounds(value, 0, value.length(), digits);
+        p.setTextSize(size * 0.9f * size / digits.height());
         float width = p.measureText(value);
-        if (width > size) p.setTextSize(size * size / width); // three digits have to fit the square
-        Paint.FontMetrics m = p.getFontMetrics();
+        if (width > size) p.setTextScaleX(Math.max(0.6f, size / width));
+        width = p.measureText(value); // already includes the squeeze
+        if (width > size) p.setTextSize(p.getTextSize() * size / width);
+        p.getTextBounds(value, 0, value.length(), digits);
         Bitmap icon = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-        new Canvas(icon).drawText(value, size / 2f, size / 2f - (m.ascent + m.descent) / 2, p);
+        new Canvas(icon).drawText(value, size / 2f, size / 2f + digits.height() / 2f, p);
         return icon;
     }
 }

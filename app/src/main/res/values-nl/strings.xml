@@ -26,4 +26,18 @@
     <string name="language">Taal</string>
     <string name="system_language">Systeemtaal</string>
     <string name="glow">Sterkte van de gloed</string>
+    <string name="fixed_scale">Vaste schaal voor de grafiek</string>
+    <string name="widget_look">Widgetweergave</string>
+    <string name="look_auto">Automatisch</string>
+    <string name="look_dark">Donker</string>
+    <string name="look_light">Licht</string>
+    <string name="section_ranges">Eenheid en grenzen</string>
+    <string name="section_display">Widget en grafiek</string>
+    <string name="scale_bottom">Onderkant schaal</string>
+    <string name="scale_top">Bovenkant schaal</string>
+    <string name="scale_invalid">De onderkant van de schaal moet onder de bovenkant liggen</string>
+    <string name="saved">Opgeslagen</string>
+    <string name="save_short">Opslaan</string>
+    <string name="range_lines">Lijnen van het doelbereik tonen</string>
+    <string name="back">Terug</string>
 </resources>

@@ -26,4 +26,18 @@
     <string name="language">Idioma</string>
     <string name="system_language">Idioma do sistema</string>
     <string name="glow">Intensidade do brilho</string>
+    <string name="fixed_scale">Escala fixa do gráfico</string>
+    <string name="widget_look">Aparência do widget</string>
+    <string name="look_auto">Automático</string>
+    <string name="look_dark">Escuro</string>
+    <string name="look_light">Claro</string>
+    <string name="section_ranges">Unidades e faixas</string>
+    <string name="section_display">Widget e gráfico</string>
+    <string name="scale_bottom">Mínimo da escala</string>
+    <string name="scale_top">Máximo da escala</string>
+    <string name="scale_invalid">O mínimo da escala deve ser menor que o máximo</string>
+    <string name="saved">Salvo</string>
+    <string name="save_short">Salvar</string>
+    <string name="range_lines">Mostrar as linhas da faixa alvo</string>
+    <string name="back">Voltar</string>
 </resources>

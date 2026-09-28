@@ -26,4 +26,18 @@
     <string name="language">Idioma</string>
     <string name="system_language">Idioma del sistema</string>
     <string name="glow">Intensidad del halo</string>
+    <string name="fixed_scale">Escala fija del gráfico</string>
+    <string name="widget_look">Aspecto del widget</string>
+    <string name="look_auto">Automático</string>
+    <string name="look_dark">Oscuro</string>
+    <string name="look_light">Claro</string>
+    <string name="section_ranges">Unidades y rangos</string>
+    <string name="section_display">Widget y gráfico</string>
+    <string name="scale_bottom">Mínimo de la escala</string>
+    <string name="scale_top">Máximo de la escala</string>
+    <string name="scale_invalid">El mínimo de la escala debe ser menor que el máximo</string>
+    <string name="saved">Guardado</string>
+    <string name="save_short">Guardar</string>
+    <string name="range_lines">Mostrar las líneas del rango objetivo</string>
+    <string name="back">Atrás</string>
 </resources>
