@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -67,6 +68,34 @@ public class GlucoseWidget extends AppWidgetProvider {
         List<Glucose.Reading> r = GlucoseService.readings;
         if (r.isEmpty()) return v; // the layout shows "---"
 
+        float density = context.getResources().getDisplayMetrics().density;
+        Face face = face(context, r, Math.round(widthDp * density), Math.round(heightDp * density), small);
+        v.setTextViewText(R.id.info, face.info);
+        v.setTextColor(R.id.info, face.infoColor);
+        v.setImageViewBitmap(R.id.graph, face.picture);
+        v.setContentDescription(R.id.graph, face.description);
+        return v;
+    }
+
+    /** What a widget of this size shows, also used for the preview in the settings. */
+    static final class Face {
+        final Bitmap picture;
+        final String info, description;
+        final int infoColor;
+
+        private Face(Bitmap picture, String info, int infoColor, String description) {
+            this.picture = picture;
+            this.info = info;
+            this.infoColor = infoColor;
+            this.description = description;
+        }
+    }
+
+    /**
+     * @param context already in the widget's language and look, so every colour and word matches
+     * @param r       readings, newest first, not empty
+     */
+    static Face face(Context context, List<Glucose.Reading> r, int w, int h, boolean small) {
         long now = System.currentTimeMillis();
         Glucose.Config c = GlucoseService.config(context);
         Glucose.Reading last = r.get(0);
@@ -75,20 +104,15 @@ public class GlucoseWidget extends AppWidgetProvider {
         int primary = context.getColor(R.color.text_primary);
         long minutes = Glucose.minutesAgo(last, now);
         String delta = Glucose.delta(r, c), age = minutes == 0 ? context.getString(R.string.now) : minutes + "m";
-
         String value = Glucose.value(last.sgv, c), info = small || delta.isEmpty() ? age : delta + " · " + age;
-        v.setTextViewText(R.id.info, info);
-        v.setTextColor(R.id.info, stale ? context.getColor(R.color.range_warn) : context.getColor(R.color.text_secondary));
 
         Art.Reading shown = new Art.Reading(value, stale ? "" : last.direction,
                 stale ? (primary & 0xFFFFFF) | 0x80000000 : primary, hue);
-        float density = context.getResources().getDisplayMetrics().density;
-        v.setImageViewBitmap(R.id.graph, Art.widget(r, shown, Math.round(widthDp * density),
-                Math.round(heightDp * density), density, now, GlucoseService.glowAlpha(context),
-                context.getColor(R.color.line), c, GlucoseService.fixedScale(context),
-                GlucoseService.rangeLines(context), small));
-        // The value and arrow are pixels now, so screen readers get them in words
-        v.setContentDescription(R.id.graph, value + " " + Glucose.arrow(stale ? "" : last.direction) + ", " + info);
-        return v;
+        Bitmap picture = Art.widget(r, shown, w, h, context.getResources().getDisplayMetrics().density, now,
+                GlucoseService.glowAlpha(context), context.getColor(R.color.line), c,
+                GlucoseService.fixedScale(context), GlucoseService.rangeLines(context), small);
+        int infoColor = stale ? context.getColor(R.color.range_warn) : context.getColor(R.color.text_secondary);
+        // The value and arrow are pixels, so screen readers get them in words
+        return new Face(picture, info, infoColor, value + " " + Glucose.arrow(stale ? "" : last.direction) + ", " + info);
     }
 }

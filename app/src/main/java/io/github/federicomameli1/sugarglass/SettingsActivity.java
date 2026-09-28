@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -53,6 +54,9 @@ public class SettingsActivity extends Activity {
     private int primary, secondary;
     private LinearLayout page;
     private TextView status;
+    private FrameLayout preview;
+    private ImageView previewPicture;
+    private TextView previewInfo;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -182,6 +186,7 @@ public class SettingsActivity extends Activity {
     private void display() {
         title(getString(R.string.section_display));
         SharedPreferences p = GlucoseService.prefs(this);
+        previewWidget();
 
         // Look, glow and the switches apply at once, as a preview; nothing typed, so nothing to validate
         page.addView(label(R.string.widget_look));
@@ -197,6 +202,7 @@ public class SettingsActivity extends Activity {
         looks.setOnCheckedChangeListener((group, id) -> {
             p.edit().putInt("look", (int) group.findViewById(id).getTag()).apply();
             GlucoseWidget.updateAll(this);
+            drawPreview();
         });
         page.addView(looks);
 
@@ -209,6 +215,7 @@ public class SettingsActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) {
                 p.edit().putInt("glow", progress).apply();
+                drawPreview();
             }
 
             @Override
@@ -228,6 +235,7 @@ public class SettingsActivity extends Activity {
         lines.setOnCheckedChangeListener((box, on) -> {
             p.edit().putBoolean("range_lines", on).apply();
             applied();
+            drawPreview();
         });
         LinearLayout.LayoutParams linesAt = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -259,6 +267,7 @@ public class SettingsActivity extends Activity {
             p.edit().putBoolean("fixed_scale", on).apply();
             scale.setVisibility(on ? View.VISIBLE : View.GONE);
             applied();
+            drawPreview();
         });
         // Look, glow and switches already show while you change them; Save stores the typed scale and closes
         button(R.string.save_short, () -> {
@@ -365,6 +374,44 @@ public class SettingsActivity extends Activity {
         stale.setOnCheckedChangeListener((box, on) -> fakeChanged("fake_stale", on));
         page.addView(stale);
         button(R.string.save_short, this::saved);
+    }
+
+    /**
+     * A 2x1 widget at the top of the widget page, drawn by the same code as the real one, so every change
+     * here shows before leaving the page. Without readings yet, it shows made-up ones.
+     */
+    private void previewWidget() {
+        int w = Math.min(getResources().getDisplayMetrics().widthPixels - dp(48), dp(320));
+        preview = new FrameLayout(this);
+        previewPicture = new ImageView(this);
+        previewPicture.setScaleType(ImageView.ScaleType.FIT_XY);
+        preview.addView(previewPicture, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        previewInfo = text(12, secondary);
+        previewInfo.setPadding(dp(14), 0, dp(14), dp(7));
+        previewInfo.setSingleLine();
+        preview.addView(previewInfo, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM));
+        LinearLayout.LayoutParams at = new LinearLayout.LayoutParams(w, Math.round(w * 0.46f));
+        at.gravity = Gravity.CENTER_HORIZONTAL;
+        at.bottomMargin = dp(8);
+        page.addView(preview, at);
+        preview.post(this::drawPreview); // sized once laid out
+    }
+
+    private void drawPreview() {
+        if (preview == null || preview.getWidth() == 0) return;
+        Context looked = GlucoseService.themed(this);
+        int look = GlucoseService.look(this);
+        preview.setBackgroundResource(look == GlucoseService.LOOK_DARK ? R.drawable.glass_dark
+                : look == GlucoseService.LOOK_LIGHT ? R.drawable.glass_light : R.drawable.glass);
+        java.util.List<Glucose.Reading> r = GlucoseService.readings;
+        if (r.isEmpty()) r = Fake.series(120, "FortyFiveUp", false, System.currentTimeMillis());
+        GlucoseWidget.Face face = GlucoseWidget.face(looked, r, preview.getWidth(), preview.getHeight(), false);
+        previewPicture.setImageBitmap(face.picture);
+        previewPicture.setContentDescription(face.description);
+        previewInfo.setText(face.info);
+        previewInfo.setTextColor(face.infoColor);
     }
 
     // Shared bits
