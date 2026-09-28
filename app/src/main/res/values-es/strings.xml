@@ -40,4 +40,6 @@
     <string name="save_short">Guardar</string>
     <string name="range_lines">Mostrar las líneas del rango objetivo</string>
     <string name="back">Atrás</string>
+    <string name="error_insecure">El http sin cifrar solo se permite en la red de casa (como 192.168.x.x). Usa https://</string>
+    <string name="error_redirect">Nightscout redirige a %s: usa esa dirección</string>
 </resources>

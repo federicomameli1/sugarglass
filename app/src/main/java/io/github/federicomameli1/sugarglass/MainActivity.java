@@ -146,7 +146,8 @@ public class MainActivity extends Activity {
         arrow.setImageBitmap(Art.arrow(stale ? "" : last.direction, dp(44), hue));
         arrow.setContentDescription(Glucose.arrow(stale ? "" : last.direction));
         String unit = c.mmol ? " mmol/L" : " mg/dL";
-        info.setText((delta.isEmpty() ? "" : delta + unit + "  ·  ") + GlucoseService.ago(this, last, now));
+        info.setText((GlucoseService.demo(this) ? "DEMO  ·  " : "")
+                + (delta.isEmpty() ? "" : delta + unit + "  ·  ") + GlucoseService.ago(this, last, now));
         info.setTextColor(stale ? getColor(R.color.range_warn) : secondary);
 
         int w = getResources().getDisplayMetrics().widthPixels - 2 * dp(24);

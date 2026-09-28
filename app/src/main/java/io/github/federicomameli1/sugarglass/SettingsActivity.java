@@ -121,6 +121,10 @@ public class SettingsActivity extends Activity {
             String address = url.getText().toString().trim();
             if (!address.isEmpty() && !address.contains("://")) address = "https://" + address;
             url.setText(address);
+            if (!address.isEmpty() && !Glucose.safeAddress(address)) {
+                say(getString(R.string.error_insecure), getColor(R.color.range_urgent));
+                return;
+            }
             p.edit().putString("url", address).putString("secret", secret.getText().toString().trim()).apply();
             // Without the exemption Android may stop the service and refuse to restart it in the background
             if (!getSystemService(PowerManager.class).isIgnoringBatteryOptimizations(getPackageName())) {

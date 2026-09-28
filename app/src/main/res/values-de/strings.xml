@@ -40,4 +40,6 @@
     <string name="save_short">Speichern</string>
     <string name="range_lines">Linien für den Zielbereich anzeigen</string>
     <string name="back">Zurück</string>
+    <string name="error_insecure">Unverschlüsseltes http ist nur im Heimnetz erlaubt (z. B. 192.168.x.x). Verwende https://</string>
+    <string name="error_redirect">Nightscout leitet weiter zu %s: verwende diese Adresse</string>
 </resources>

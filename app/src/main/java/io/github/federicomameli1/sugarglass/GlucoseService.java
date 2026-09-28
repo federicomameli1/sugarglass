@@ -215,7 +215,9 @@ public class GlucoseService extends Service {
                 status = getString(R.string.status_updated,
                         DateFormat.getTimeFormat(this).format(new Date()), readings.size());
             } catch (Exception e) { // keep the old readings: their age shows they are getting stale
-                status = getString(R.string.status_error, e.toString());
+                String error = e.toString(), secret = prefs(this).getString("secret", "");
+                if (!secret.isEmpty()) error = error.replace(secret, "…"); // some errors quote the address, token included
+                status = getString(R.string.status_error, error);
             }
             getSystemService(NotificationManager.class).notify(NOTIFICATION_ID, notification());
             GlucoseWidget.updateAll(this);
@@ -227,6 +229,8 @@ public class GlucoseService extends Service {
         String base = p.getString("url", "").replaceAll("/+$", "");
         String secret = p.getString("secret", "");
         if (base.isEmpty()) throw new IOException(getString(R.string.error_no_url));
+        // Also checked here, not only when saving: 1.1.0 accepted plain http to any address
+        if (!Glucose.safeAddress(base)) throw new IOException(getString(R.string.error_insecure));
         boolean token = TOKEN.matcher(secret).matches();
         String url = base + "/api/v1/entries/sgv.json?count=1000&find%5Bdate%5D%5B%24gte%5D="
                 + (System.currentTimeMillis() - Glucose.WINDOW_MS) + (token ? "&token=" + secret : "");
@@ -234,9 +238,13 @@ public class GlucoseService extends Service {
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
         c.setConnectTimeout(15_000);
         c.setReadTimeout(15_000);
+        // A redirect would carry the api-secret header to wherever it points: stop and say where instead
+        c.setInstanceFollowRedirects(false);
         if (!secret.isEmpty() && !token) c.setRequestProperty("api-secret", sha1(secret));
         try {
-            if (c.getResponseCode() != 200) throw new IOException(getString(R.string.error_http, c.getResponseCode()));
+            int code = c.getResponseCode();
+            if (code >= 300 && code < 400) throw new IOException(getString(R.string.error_redirect, site(c.getHeaderField("Location"))));
+            if (code != 200) throw new IOException(getString(R.string.error_http, code));
             JSONArray entries = new JSONArray(new Scanner(c.getInputStream(), "UTF-8").useDelimiter("\\A").next());
             List<Glucose.Reading> out = new ArrayList<>();
             for (int i = 0; i < entries.length(); i++) {
@@ -250,6 +258,21 @@ public class GlucoseService extends Service {
         } finally {
             c.disconnect();
         }
+    }
+
+    /** Just scheme and host of a redirect target: the full address could echo the token back. */
+    private static String site(String location) {
+        try {
+            java.net.URI u = new java.net.URI(location);
+            return u.getScheme() + "://" + u.getHost();
+        } catch (Exception e) {
+            return "?";
+        }
+    }
+
+    /** Debug builds only: fake readings are on, and everything showing them must say so. */
+    static boolean demo(Context context) {
+        return BuildConfig.DEBUG && prefs(context).getBoolean("fake", false);
     }
 
     private static String sha1(String s) throws Exception {
@@ -279,7 +302,7 @@ public class GlucoseService extends Service {
         String arrow = Glucose.stale(last, now) ? "" : " " + Glucose.arrow(last.direction);
         String delta = Glucose.delta(r, c);
         return b.setSmallIcon(Icon.createWithBitmap(statusBarIcon(value)))
-                .setContentTitle(value + arrow + (delta.isEmpty() ? "" : "   " + delta))
+                .setContentTitle((demo(this) ? "DEMO  " : "") + value + arrow + (delta.isEmpty() ? "" : "   " + delta))
                 .setContentText(ago(this, last, now))
                 .build();
     }

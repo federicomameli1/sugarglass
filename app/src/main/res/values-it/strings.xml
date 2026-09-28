@@ -40,4 +40,6 @@
     <string name="save_short">Salva</string>
     <string name="range_lines">Mostra le linee della fascia target</string>
     <string name="back">Indietro</string>
+    <string name="error_insecure">L\'http semplice è permesso solo nella rete di casa (tipo 192.168.x.x). Usa https://</string>
+    <string name="error_redirect">Nightscout rimanda a %s: usa quell\'indirizzo</string>
 </resources>

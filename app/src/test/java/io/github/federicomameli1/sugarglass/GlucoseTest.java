@@ -3,6 +3,7 @@ package io.github.federicomameli1.sugarglass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -64,6 +65,24 @@ public class GlucoseTest {
         // a spike above high stretches the top, the bottom stays at low
         assertArrayEquals(new int[]{70, 260}, Glucose.scale(Arrays.asList(at(0, 260), at(5, 100)), MGDL, null));
         assertArrayEquals(new int[]{60, 250}, Glucose.scale(Arrays.asList(at(0, 400)), MGDL, new int[]{60, 250}));
+    }
+
+    @Test
+    public void plainHttpOnlyOnTheHomeNetwork() {
+        assertTrue(Glucose.safeAddress("https://my.nightscout.site"));
+        assertTrue(Glucose.safeAddress("HTTPS://My.Site"));
+        assertTrue(Glucose.safeAddress("http://192.168.1.20:1337"));
+        assertTrue(Glucose.safeAddress("http://10.0.0.5"));
+        assertTrue(Glucose.safeAddress("http://172.20.1.1"));
+        assertTrue(Glucose.safeAddress("http://nightscout.local"));
+        assertTrue(Glucose.safeAddress("http://[fd12::1]:1337"));
+        assertFalse(Glucose.safeAddress("http://my.nightscout.site"));
+        assertFalse(Glucose.safeAddress("http://172.32.1.1"));   // just outside 172.16/12
+        assertFalse(Glucose.safeAddress("http://192.168.1.300")); // not an address
+        assertFalse(Glucose.safeAddress("http://8.8.8.8"));
+        assertFalse(Glucose.safeAddress("http://192.168.1.1.evil.com"));
+        assertFalse(Glucose.safeAddress("ftp://192.168.1.1"));
+        assertFalse(Glucose.safeAddress("not a url"));
     }
 
     @Test

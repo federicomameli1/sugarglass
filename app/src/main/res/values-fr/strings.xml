@@ -40,4 +40,6 @@
     <string name="save_short">Enregistrer</string>
     <string name="range_lines">Afficher les lignes de la plage cible</string>
     <string name="back">Retour</string>
+    <string name="error_insecure">Le http simple n\'est autorisé que sur le réseau local (comme 192.168.x.x). Utilisez https://</string>
+    <string name="error_redirect">Nightscout redirige vers %s : utilisez cette adresse</string>
 </resources>

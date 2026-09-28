@@ -40,4 +40,6 @@
     <string name="save_short">Salvar</string>
     <string name="range_lines">Mostrar as linhas da faixa alvo</string>
     <string name="back">Voltar</string>
+    <string name="error_insecure">O http sem criptografia só é permitido na rede de casa (como 192.168.x.x). Use https://</string>
+    <string name="error_redirect">O Nightscout redireciona para %s: use esse endereço</string>
 </resources>

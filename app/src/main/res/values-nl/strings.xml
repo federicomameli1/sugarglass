@@ -40,4 +40,6 @@
     <string name="save_short">Opslaan</string>
     <string name="range_lines">Lijnen van het doelbereik tonen</string>
     <string name="back">Terug</string>
+    <string name="error_insecure">Onversleuteld http mag alleen op je thuisnetwerk (zoals 192.168.x.x). Gebruik https://</string>
+    <string name="error_redirect">Nightscout verwijst door naar %s: gebruik dat adres</string>
 </resources>

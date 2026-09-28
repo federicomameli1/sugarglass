@@ -41,4 +41,6 @@
     <string name="save_short">Save</string>
     <string name="range_lines">Show target range lines</string>
     <string name="back">Back</string>
+    <string name="error_insecure">Plain http is only allowed on your home network (like 192.168.x.x). Use https://</string>
+    <string name="error_redirect">Nightscout redirects to %s: use that address</string>
 </resources>

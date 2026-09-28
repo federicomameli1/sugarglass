@@ -53,6 +53,11 @@ Tested on HyperOS only so far; if the steps for your phone differ, please open a
 
 Sugarglass talks to your Nightscout site and nothing else. Your address and token stay on your phone. No analytics, no ads, no account.
 
+- Your token only travels encrypted: plain `http://` is accepted just for addresses on your home network (like `192.168.x.x` or `nightscout.local`), everything else needs `https://`.
+- If your site redirects somewhere else, Sugarglass stops and tells you the new address instead of following it with your credentials.
+- The settings are left out of Android's cloud backups and phone-to-phone transfers, so the token never leaves the phone; on a new phone you enter it again.
+- Prefer a token with only the `readable` role over the API secret: it can read your data but not change anything.
+
 Permissions: internet (Nightscout), notifications, foreground service (to stay alive), start at boot, and the request to be excluded from battery optimisation.
 
 ## Not a medical device
@@ -67,7 +72,7 @@ JDK 17 and the Android SDK (platform 34).
 ./gradlew test assembleDebug
 ```
 
-The debug build installs next to the real app as **Sugarglass debug**, and its settings have a Debug page with fake readings: pick any value, trend or a stale reading and see the widget, notification and status bar with it. A prebuilt one is attached to each release.
+The debug build installs next to the real app as **Sugarglass debug**, and its settings have a Debug page with fake readings: pick any value, trend or a stale reading and see the widget, notification and status bar with it. While fake readings are on, everything showing them says **DEMO**. A prebuilt one is attached to each release.
 
 Release builds are signed with a key kept outside the repo: create `keystore.properties` in the project root with `storeFile`, `storePassword`, `keyAlias` and `keyPassword`, then `./gradlew assembleRelease`.
 

@@ -40,4 +40,6 @@
     <string name="save_short">Zapisz</string>
     <string name="range_lines">Pokaż linie zakresu docelowego</string>
     <string name="back">Wstecz</string>
+    <string name="error_insecure">Zwykłe http jest dozwolone tylko w sieci domowej (np. 192.168.x.x). Użyj https://</string>
+    <string name="error_redirect">Nightscout przekierowuje do %s: użyj tego adresu</string>
 </resources>

@@ -105,6 +105,7 @@ public class GlucoseWidget extends AppWidgetProvider {
         long minutes = Glucose.minutesAgo(last, now);
         String delta = Glucose.delta(r, c), age = minutes == 0 ? context.getString(R.string.now) : minutes + "m";
         String value = Glucose.value(last.sgv, c), info = small || delta.isEmpty() ? age : delta + " · " + age;
+        if (GlucoseService.demo(context)) info = "DEMO · " + info; // made-up readings must never pass for real ones
 
         Art.Reading shown = new Art.Reading(value, stale ? "" : last.direction,
                 stale ? (primary & 0xFFFFFF) | 0x80000000 : primary, hue);

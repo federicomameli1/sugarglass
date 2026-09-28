@@ -1,5 +1,7 @@
 package io.github.federicomameli1.sugarglass;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,6 +109,40 @@ final class Glucose {
         }
         int pad = Math.max(0, MIN_SPAN - (max - min)) / 2; // quiet data stays flat instead of turning into cliffs
         return new int[]{min - pad, max + pad};
+    }
+
+    /**
+     * Whether the app will send credentials to this Nightscout address: https anywhere, plain http only
+     * on the home network, where nothing crosses the internet unencrypted.
+     */
+    static boolean safeAddress(String url) {
+        URI u;
+        try {
+            u = new URI(url);
+        } catch (URISyntaxException e) {
+            return false;
+        }
+        if (u.getScheme() == null || u.getHost() == null) return false;
+        String scheme = u.getScheme().toLowerCase(Locale.ROOT), host = u.getHost().toLowerCase(Locale.ROOT);
+        if (scheme.equals("https")) return true;
+        if (!scheme.equals("http")) return false;
+        return host.equals("localhost") || host.endsWith(".local") || host.endsWith(".lan")
+                || host.endsWith(".home.arpa") || privateIPv4(host)
+                // IPv6: unique local (fc00::/7), link-local and loopback
+                || host.startsWith("[fc") || host.startsWith("[fd") || host.startsWith("[fe80") || host.equals("[::1]");
+    }
+
+    private static boolean privateIPv4(String host) {
+        String[] parts = host.split("\\.");
+        if (parts.length != 4) return false;
+        int[] o = new int[4];
+        for (int i = 0; i < 4; i++) {
+            if (!parts[i].matches("\\d{1,3}")) return false;
+            o[i] = Integer.parseInt(parts[i]);
+            if (o[i] > 255) return false;
+        }
+        return o[0] == 10 || o[0] == 127 || (o[0] == 172 && o[1] >= 16 && o[1] <= 31)
+                || (o[0] == 192 && o[1] == 168) || (o[0] == 169 && o[1] == 254);
     }
 
     static boolean stale(Reading r, long now) {
