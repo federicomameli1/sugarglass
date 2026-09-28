@@ -69,6 +69,7 @@ public class SettingsActivity extends Activity {
         density = getResources().getDisplayMetrics().density;
         primary = getColor(R.color.text_primary);
         secondary = getColor(R.color.text_secondary);
+        MainActivity.paintBars(this);
         page = new LinearLayout(this);
         page.setOrientation(LinearLayout.VERTICAL);
         page.setPadding(dp(24), dp(16), dp(24), dp(24));

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
         density = getResources().getDisplayMetrics().density;
         primary = getColor(R.color.text_primary);
         secondary = getColor(R.color.text_secondary);
+        paintBars(this);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -151,6 +153,22 @@ public class MainActivity extends Activity {
         graph.setImageBitmap(Art.draw(r, w, dp(GRAPH_DP), density, now, hue, GlucoseService.glowAlpha(this),
                 getColor(R.color.line), true, c, GlucoseService.fixedScale(this), GlucoseService.rangeLines(this),
                 0)); // nothing over it: all crisp
+    }
+
+    /**
+     * Status and navigation bars in the page's colour, set here rather than by the theme: with a language
+     * picked in the settings some phones (HyperOS) left the navigation bar white on a dark page.
+     */
+    static void paintBars(Activity a) {
+        int background = a.getColor(R.color.background);
+        a.getWindow().setStatusBarColor(background);
+        a.getWindow().setNavigationBarColor(background);
+        boolean light = (a.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                != Configuration.UI_MODE_NIGHT_YES;
+        int iconsDark = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        View decor = a.getWindow().getDecorView();
+        int flags = decor.getSystemUiVisibility();
+        decor.setSystemUiVisibility(light ? flags | iconsDark : flags & ~iconsDark);
     }
 
     private TextView text(float sp, int color) {
