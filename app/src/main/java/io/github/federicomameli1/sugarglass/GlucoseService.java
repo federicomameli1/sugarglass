@@ -21,6 +21,7 @@ import android.graphics.drawable.Icon;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.text.format.DateFormat;
 
@@ -40,7 +41,6 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Pattern;
 
 /**
  * Polls Nightscout while the phone is awake and keeps the notification and the widgets current.
@@ -48,17 +48,27 @@ import java.util.regex.Pattern;
  */
 public class GlucoseService extends Service {
 
-    private static final String CHANNEL = "glucose";
+    // A new id, because a channel's importance can't be lowered by the app once the user or the system
+    // (HyperOS raised it to high) has changed it; the old "glucose" channel is deleted on start
+    private static final String CHANNEL = "glucose_quiet", OLD_CHANNEL = "glucose";
     private static final int NOTIFICATION_ID = 1;
     private static final long POLL_MS = 60_000;
     private static final long WATCHDOG_MS = 15 * 60_000;
-    // Nightscout access tokens look like "name-0123456789abcdef"; anything else is taken as the API secret
-    private static final Pattern TOKEN = Pattern.compile("[\\w-]+-[0-9a-f]{16}");
+    private static final long FETCH_DEADLINE_MS = 30_000; // a whole request, however slowly the server answers
 
     /** Newest first. Shared with the widget, which runs in the same process. */
     static volatile List<Glucose.Reading> readings = Collections.emptyList();
+    /**
+     * Where {@link #readings} came from: "fake", or the Nightscout address. Changing either drops them,
+     * so one site's values, or made-up ones, never show as another's.
+     */
+    static volatile String source = "";
     /** Last fetch outcome for the settings screen; empty until the first attempt. */
     static volatile String status = "";
+    /** Whether the last fetch failed, so the notification can say so without quoting the error. */
+    static volatile boolean failing;
+    /** What the notification last showed that matters, so a dark screen isn't woken for an unchanged value. */
+    private volatile String shown = "";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ExecutorService network = Executors.newSingleThreadExecutor();
@@ -66,6 +76,8 @@ public class GlucoseService extends Service {
     private final Runnable poll = new Runnable() {
         @Override
         public void run() {
+            // Redraw from memory first, so the age and the stale state move even while a fetch hangs
+            redraw(getSystemService(PowerManager.class).isInteractive());
             refresh();
             handler.postDelayed(this, POLL_MS);
         }
@@ -73,7 +85,8 @@ public class GlucoseService extends Service {
     private final BroadcastReceiver screenOn = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refresh();
+            redraw(true); // right away from memory, with the age as of now...
+            refresh();    // ...then the fresh reading, a second or two later
         }
     };
 
@@ -160,8 +173,18 @@ public class GlucoseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        getSystemService(NotificationManager.class).createNotificationChannel(new NotificationChannel(
-                CHANNEL, getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW));
+        // Default importance keeps it on the lock screen; no sound, vibration or light, so updating it
+        // never counts as an alert (HyperOS lit up the screen edges for each update on a high channel)
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        nm.deleteNotificationChannel(OLD_CHANNEL);
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL, getString(R.string.channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setSound(null, null);
+        channel.enableVibration(false);
+        channel.enableLights(false);
+        channel.setShowBadge(false);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        nm.createNotificationChannel(channel);
         registerReceiver(screenOn, new IntentFilter(Intent.ACTION_SCREEN_ON));
         try {
             startForeground(NOTIFICATION_ID, notification());
@@ -205,23 +228,57 @@ public class GlucoseService extends Service {
 
     private void refresh() {
         network.execute(() -> {
+            SharedPreferences p = prefs(this);
+            // Debug builds only: made-up readings, chosen in the settings, instead of Nightscout
+            boolean fake = BuildConfig.DEBUG && p.getBoolean("fake", false);
+            String from = fake ? "fake" : p.getString("url", "");
+            if (!from.equals(source)) { // a different source: what we have is not its data
+                readings = Collections.emptyList();
+                source = from;
+                handler.post(() -> redraw(true));
+            }
             try {
-                SharedPreferences p = prefs(this);
-                // Debug builds only: made-up readings, chosen in the settings, instead of Nightscout
-                readings = BuildConfig.DEBUG && p.getBoolean("fake", false)
-                        ? Fake.series(p.getInt("fake_value", 120), p.getString("fake_direction", "Flat"),
-                                p.getBoolean("fake_stale", false), System.currentTimeMillis())
-                        : fetch();
+                readings = fake ? Fake.series(p.getInt("fake_value", 120), p.getString("fake_direction", "Flat"),
+                        p.getBoolean("fake_stale", false), System.currentTimeMillis()) : fetch();
+                failing = false;
                 status = getString(R.string.status_updated,
                         DateFormat.getTimeFormat(this).format(new Date()), readings.size());
-            } catch (Exception e) { // keep the old readings: their age shows they are getting stale
-                String error = e.toString(), secret = prefs(this).getString("secret", "");
+            } catch (Throwable e) { // keep the old readings: their age shows they are getting stale
+                // Throwable, not Exception: a hostile or broken answer must not crash-loop the service
+                String error = e.toString(), secret = p.getString("secret", "");
                 if (!secret.isEmpty()) error = error.replace(secret, "…"); // some errors quote the address, token included
+                failing = true;
                 status = getString(R.string.status_error, error);
             }
-            getSystemService(NotificationManager.class).notify(NOTIFICATION_ID, notification());
-            GlucoseWidget.updateAll(this);
+            try {
+                redraw(getSystemService(PowerManager.class).isInteractive());
+            } catch (Throwable e) {
+                status = getString(R.string.status_error, e.toString());
+            }
         });
+    }
+
+    /**
+     * Updates the notification and the widgets. With the screen off, the notification is only reposted
+     * when something that matters changed (value, arrow, stale, demo, or the error with no readings):
+     * every update counts as an interruption, and the screen-on redraw brings the age up to date anyway.
+     */
+    private void redraw(boolean screenOn) {
+        List<Glucose.Reading> r = readings;
+        long now = System.currentTimeMillis();
+        String key;
+        if (r.isEmpty()) {
+            key = "none:" + failing;
+        } else {
+            Glucose.Reading last = r.get(0);
+            boolean stale = Glucose.stale(last, now);
+            key = last.sgv + ":" + (stale ? "" : last.direction) + ":" + stale + ":" + demo(this);
+        }
+        if (screenOn || !key.equals(shown)) {
+            shown = key;
+            getSystemService(NotificationManager.class).notify(NOTIFICATION_ID, notification());
+        }
+        GlucoseWidget.updateAll(this);
     }
 
     private List<Glucose.Reading> fetch() throws Exception {
@@ -231,7 +288,8 @@ public class GlucoseService extends Service {
         if (base.isEmpty()) throw new IOException(getString(R.string.error_no_url));
         // Also checked here, not only when saving: 1.1.0 accepted plain http to any address
         if (!Glucose.safeAddress(base)) throw new IOException(getString(R.string.error_insecure));
-        boolean token = TOKEN.matcher(secret).matches();
+        if (!Glucose.secretAllowed(base, secret)) throw new IOException(getString(R.string.error_http_secret));
+        boolean token = Glucose.isToken(secret);
         String url = base + "/api/v1/entries/sgv.json?count=1000&find%5Bdate%5D%5B%24gte%5D="
                 + (System.currentTimeMillis() - Glucose.WINDOW_MS) + (token ? "&token=" + secret : "");
 
@@ -241,6 +299,10 @@ public class GlucoseService extends Service {
         // A redirect would carry the api-secret header to wherever it points: stop and say where instead
         c.setInstanceFollowRedirects(false);
         if (!secret.isEmpty() && !token) c.setRequestProperty("api-secret", sha1(secret));
+        // The timeouts only bound each read; this bounds the whole request, so a server trickling its
+        // answer cannot hold the fetch (and the display behind it) forever
+        Runnable abort = c::disconnect;
+        handler.postDelayed(abort, FETCH_DEADLINE_MS);
         try {
             int code = c.getResponseCode();
             if (code >= 300 && code < 400) throw new IOException(getString(R.string.error_redirect, site(c.getHeaderField("Location"))));
@@ -256,6 +318,7 @@ public class GlucoseService extends Service {
             out.sort((a, b) -> Long.compare(b.date, a.date));
             return out;
         } finally {
+            handler.removeCallbacks(abort);
             c.disconnect();
         }
     }
@@ -270,9 +333,12 @@ public class GlucoseService extends Service {
         }
     }
 
-    /** Debug builds only: fake readings are on, and everything showing them must say so. */
+    /**
+     * Debug builds only: what is shown is made up, and everything showing it must say so. Taken from
+     * where the readings came from, not from the setting, which can change before they are replaced.
+     */
     static boolean demo(Context context) {
-        return BuildConfig.DEBUG && prefs(context).getBoolean("fake", false);
+        return BuildConfig.DEBUG && "fake".equals(source);
     }
 
     private static String sha1(String s) throws Exception {
@@ -293,16 +359,19 @@ public class GlucoseService extends Service {
                 .setContentIntent(PendingIntent.getActivity(this, 0,
                         new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
         List<Glucose.Reading> r = readings;
-        if (r.isEmpty()) return b.setContentTitle(status.isEmpty() ? getString(R.string.status_waiting) : status).build();
+        // Never the error itself here: it can name the Nightscout site, and this shows on the lock screen
+        if (r.isEmpty()) return b.setContentTitle(getString(failing ? R.string.notify_error : R.string.status_waiting)).build();
 
         long now = System.currentTimeMillis();
         Glucose.Config c = config(this);
         Glucose.Reading last = r.get(0);
+        boolean stale = Glucose.stale(last, now);
         String value = Glucose.value(last.sgv, c);
-        String arrow = Glucose.stale(last, now) ? "" : " " + Glucose.arrow(last.direction);
-        String delta = Glucose.delta(r, c);
-        return b.setSmallIcon(Icon.createWithBitmap(statusBarIcon(value)))
-                .setContentTitle((demo(this) ? "DEMO  " : "") + value + arrow + (delta.isEmpty() ? "" : "   " + delta))
+        String arrow = stale ? "" : " " + Glucose.arrow(last.direction);
+        String delta = stale ? "" : Glucose.delta(r, c); // an old trend is not a trend
+        // The number in the status bar only while it is current and real; otherwise the plain drop
+        if (!stale && !demo(this)) b.setSmallIcon(Icon.createWithBitmap(statusBarIcon(value)));
+        return b.setContentTitle((demo(this) ? "DEMO  " : "") + value + arrow + (delta.isEmpty() ? "" : "   " + delta))
                 .setContentText(ago(this, last, now))
                 .build();
     }

@@ -32,12 +32,14 @@ public class GlucoseWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
-        update(context, manager, ids);
+        // The ids in the broadcast are ignored: the receiver is exported (it has to be), so any app could
+        // send thousands of them and stall the app; only our own widgets get drawn
+        updateAll(context);
     }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager manager, int id, Bundle options) {
-        manager.updateAppWidget(id, render(context, options));
+        update(context, manager, new int[]{id});
     }
 
     static void updateAll(Context context) {
@@ -46,7 +48,17 @@ public class GlucoseWidget extends AppWidgetProvider {
     }
 
     private static void update(Context context, AppWidgetManager manager, int[] ids) {
-        for (int id : ids) manager.updateAppWidget(id, render(context, manager.getAppWidgetOptions(id)));
+        for (int id : ids) {
+            try {
+                manager.updateAppWidget(id, render(context, manager.getAppWidgetOptions(id)));
+            } catch (Throwable e) { // one bad widget, or an odd size from a launcher, must not crash the app
+                try {
+                    manager.updateAppWidget(id, new RemoteViews(context.getPackageName(), R.layout.widget));
+                } catch (Throwable ignored) {
+                    // nothing more to try
+                }
+            }
+        }
     }
 
     private static RemoteViews render(Context base, Bundle options) {
@@ -54,22 +66,34 @@ public class GlucoseWidget extends AppWidgetProvider {
         // localized context is a snapshot taken when it started
         Context context = GlucoseService.themed(GlucoseService.localized(base.getApplicationContext()));
         // Portrait cell size: MIN_WIDTH is the portrait width, MAX_HEIGHT the portrait height
-        int widthDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), 40);
-        int heightDp = Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT), 40);
+        // ...clamped to the screen, so a launcher reporting a silly size cannot make us run out of memory
+        android.util.DisplayMetrics screen = context.getResources().getDisplayMetrics();
+        int maxWidthDp = Math.round(screen.widthPixels / screen.density), maxHeightDp = Math.round(screen.heightPixels / screen.density);
+        int widthDp = Math.min(Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), 40), maxWidthDp);
+        int heightDp = Math.min(Math.max(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT), 40), maxHeightDp);
         boolean small = widthDp < SMALL_BELOW_DP;
 
         RemoteViews v = new RemoteViews(context.getPackageName(), small ? R.layout.widget_small : R.layout.widget);
         v.setOnClickPendingIntent(android.R.id.background, PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
         int look = GlucoseService.look(context);
-        // The launcher picks the automatic glass by its own mode; a forced look names its glass outright
-        if (look != GlucoseService.LOOK_AUTO) v.setInt(android.R.id.background, "setBackgroundResource",
-                look == GlucoseService.LOOK_DARK ? R.drawable.glass_dark : R.drawable.glass_light);
+        // The launcher picks the automatic glass by its own mode; a forced look names its glass outright.
+        // Set every time, automatic included: the launcher reuses the previous view, so whatever a render
+        // does not set keeps the old value
+        v.setInt(android.R.id.background, "setBackgroundResource", look == GlucoseService.LOOK_DARK
+                ? R.drawable.glass_dark : look == GlucoseService.LOOK_LIGHT ? R.drawable.glass_light : R.drawable.glass);
         List<Glucose.Reading> r = GlucoseService.readings;
-        if (r.isEmpty()) return v; // the layout shows "---"
+        if (r.isEmpty()) { // no data: clear everything a previous render drew
+            v.setTextViewText(R.id.info, "---");
+            v.setTextColor(R.id.info, context.getColor(R.color.text_secondary));
+            v.setImageViewResource(R.id.graph, 0);
+            v.setContentDescription(R.id.graph, "---");
+            return v;
+        }
 
         float density = context.getResources().getDisplayMetrics().density;
-        Face face = face(context, r, Math.round(widthDp * density), Math.round(heightDp * density), small);
+        Face face = face(context, r, Math.round(widthDp * density), Math.round(heightDp * density), small,
+                GlucoseService.fixedScale(context));
         v.setTextViewText(R.id.info, face.info);
         v.setTextColor(R.id.info, face.infoColor);
         v.setImageViewBitmap(R.id.graph, face.picture);
@@ -94,26 +118,32 @@ public class GlucoseWidget extends AppWidgetProvider {
     /**
      * @param context already in the widget's language and look, so every colour and word matches
      * @param r       readings, newest first, not empty
+     * @param fixed   the graph's fixed scale, or null to fit the data (the preview passes the one being typed)
      */
-    static Face face(Context context, List<Glucose.Reading> r, int w, int h, boolean small) {
+    static Face face(Context context, List<Glucose.Reading> r, int w, int h, boolean small, int[] fixed) {
         long now = System.currentTimeMillis();
         Glucose.Config c = GlucoseService.config(context);
         Glucose.Reading last = r.get(0);
         boolean stale = Glucose.stale(last, now);
+        // After 5 minutes with nothing new the value goes, until a reading comes: a home screen widget can
+        // stay on screen long after the app stopped updating it, and then an old number looks current
+        boolean hidden = Glucose.hidden(last, now);
         int hue = GlucoseService.color(context, last, now, c);
         int primary = context.getColor(R.color.text_primary);
         long minutes = Glucose.minutesAgo(last, now);
-        String delta = Glucose.delta(r, c), age = minutes == 0 ? context.getString(R.string.now) : minutes + "m";
-        String value = Glucose.value(last.sgv, c), info = small || delta.isEmpty() ? age : delta + " · " + age;
+        String delta = hidden ? "" : Glucose.delta(r, c), age = minutes == 0 ? context.getString(R.string.now) : minutes + "m";
+        String value = hidden ? "---" : Glucose.value(last.sgv, c);
+        String info = small || delta.isEmpty() ? age : delta + " · " + age;
         if (GlucoseService.demo(context)) info = "DEMO · " + info; // made-up readings must never pass for real ones
 
-        Art.Reading shown = new Art.Reading(value, stale ? "" : last.direction,
-                stale ? (primary & 0xFFFFFF) | 0x80000000 : primary, hue);
+        Art.Reading shown = new Art.Reading(value, hidden ? "" : last.direction,
+                hidden ? context.getColor(R.color.text_secondary) : primary,
+                hidden ? context.getColor(R.color.stale) : hue);
         Bitmap picture = Art.widget(r, shown, w, h, context.getResources().getDisplayMetrics().density, now,
                 GlucoseService.glowAlpha(context), context.getColor(R.color.line), c,
-                GlucoseService.fixedScale(context), GlucoseService.rangeLines(context), small);
-        int infoColor = stale ? context.getColor(R.color.range_warn) : context.getColor(R.color.text_secondary);
+                fixed, GlucoseService.rangeLines(context), small);
+        int infoColor = hidden || stale ? context.getColor(R.color.range_warn) : context.getColor(R.color.text_secondary);
         // The value and arrow are pixels, so screen readers get them in words
-        return new Face(picture, info, infoColor, value + " " + Glucose.arrow(stale ? "" : last.direction) + ", " + info);
+        return new Face(picture, info, infoColor, value + " " + Glucose.arrow(hidden ? "" : last.direction) + ", " + info);
     }
 }

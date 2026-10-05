@@ -10,6 +10,7 @@
 
     <application
         android:allowBackup="false"
+        android:taskAffinity=""
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"

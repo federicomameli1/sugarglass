@@ -33,8 +33,8 @@ What it deliberately does **not** do: alarms, treatments, uploading, statistics.
 
 ## Install
 
-1. On your phone, [download the APK](https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk) and open it. Android will ask you to **allow installing apps** from your browser or file manager the first time: allow it, then tap **Install**. If Google Play Protect warns that the app comes from an unknown developer, that is because it isn't on the Play Store: tap **More details → Install anyway**. Updates install the same way, over the old version, and keep your settings.
-2. Open Sugarglass, enter your Nightscout address and, if your site is not public, a token (recommended, with the `readable` role) or your API secret. Tap **Save and start**. A Nightscout on your home network (`http://192.168.…`) works too.
+1. On your phone, [download the APK](https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk) and open it. Android will ask you to **allow installing apps** from your browser or file manager the first time: allow it, then tap **Install**. If Google Play Protect warns that the app comes from an unknown developer, that is because it isn't on the Play Store: tap **More details → Install anyway**. Updates install the same way, over the old version, and keep your settings. If an update ever refuses to install over the app you have ("package conflicts"), **don't uninstall**: it may not be a genuine build. Check it as described under [Is it the real one?](#is-it-the-real-one) and open an issue.
+2. Open Sugarglass, enter your Nightscout address and, if your site is not public, a token (recommended, with the `readable` role) or your API secret. Tap **Save and start**. A Nightscout on your home network (`http://192.168.…`) works too, with a token rather than the API secret.
 3. Allow notifications and let it **ignore battery optimisation**: without that Android may stop it.
 4. Long-press the home screen and add the Sugarglass widget.
 
@@ -53,12 +53,23 @@ Tested on HyperOS only so far; if the steps for your phone differ, please open a
 
 Sugarglass talks to your Nightscout site and nothing else. Your address and token stay on your phone. No analytics, no ads, no account.
 
-- Your token only travels encrypted: plain `http://` is accepted just for addresses on your home network (like `192.168.x.x` or `nightscout.local`), everything else needs `https://`.
+- Your credentials only travel encrypted: plain `http://` is accepted just for addresses on your home network (like `192.168.x.x` or `nightscout.local`), and there only with a `readable` token, never the API secret. Everything else needs `https://`. Addresses on the phone itself (`localhost`) are refused, since any app on it could pretend to be Nightscout.
+- The saved token is never shown again, and stays with the site it was given to: change the address and you type it again.
 - If your site redirects somewhere else, Sugarglass stops and tells you the new address instead of following it with your credentials.
 - The settings are left out of Android's cloud backups and phone-to-phone transfers, so the token never leaves the phone; on a new phone you enter it again.
 - Prefer a token with only the `readable` role over the API secret: it can read your data but not change anything.
 
 Permissions: internet (Nightscout), notifications, foreground service (to stay alive), start at boot, and the request to be excluded from battery optimisation.
+
+## Is it the real one?
+
+Every Sugarglass release is signed with the same key. Its certificate's SHA-256 fingerprint is:
+
+```
+0C:56:17:BC:89:17:34:81:82:9D:EF:19:A9:E8:EC:06:09:C0:D3:92:84:D4:06:4F:25:78:0C:DB:C1:45:1A:86
+```
+
+Check a downloaded APK with `apksigner verify --print-certs sugarglass.apk`, or on the phone with an app like AppVerifier. If it doesn't match, don't install it.
 
 ## Not a medical device
 
@@ -72,7 +83,7 @@ JDK 17 and the Android SDK (platform 34).
 ./gradlew test assembleDebug
 ```
 
-The debug build installs next to the real app as **Sugarglass debug**, and its settings have a Debug page with fake readings: pick any value, trend or a stale reading and see the widget, notification and status bar with it. While fake readings are on, everything showing them says **DEMO**. A prebuilt one is attached to each release.
+The debug build installs next to the real app as **Sugarglass debug**, and its settings have a Debug page with fake readings: pick any value, trend or a stale reading and see the widget, notification and status bar with it. While fake readings are on, everything showing them says **DEMO**. It is not published: it is debuggable and signed with a development key, so build it yourself (`./gradlew assembleDebug`) or take the one from the latest CI run.
 
 Release builds are signed with a key kept outside the repo: create `keystore.properties` in the project root with `storeFile`, `storePassword`, `keyAlias` and `keyPassword`, then `./gradlew assembleRelease`.
 

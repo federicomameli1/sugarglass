@@ -9,7 +9,7 @@
     <string name="low">Niski</string>
     <string name="high">Wysoki</string>
     <string name="urgent_high">Pilnie wysoki</string>
-    <string name="ranges_invalid">Progi muszą rosnąć: pilnie niski, niski, wysoki, pilnie wysoki</string>
+    <string name="ranges_invalid">Progi muszą rosnąć i być realne: pilnie niski 40-90, niski 55-120, wysoki 120-300, pilnie wysoki 150-400 mg/dL</string>
     <string name="save">Zapisz i uruchom</string>
     <string name="settings">Ustawienia</string>
     <string name="last_3h">Ostatnie 3 godziny</string>
@@ -42,4 +42,8 @@
     <string name="back">Wstecz</string>
     <string name="error_insecure">Zwykłe http jest dozwolone tylko w sieci domowej (np. 192.168.x.x). Użyj https://</string>
     <string name="error_redirect">Nightscout przekierowuje do %s: użyj tego adresu</string>
+    <string name="error_http_secret">Przy zwykłym http użyj tokenu z rolą readable, nie API secret</string>
+    <string name="notify_error">Brak połączenia z Nightscout. Szczegóły w aplikacji</string>
+    <string name="secret_kept">Zapisano. Zostaw puste, aby zachować</string>
+    <string name="example">Przykład</string>
 </resources>

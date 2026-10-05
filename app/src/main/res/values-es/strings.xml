@@ -9,7 +9,7 @@
     <string name="low">Baja</string>
     <string name="high">Alta</string>
     <string name="urgent_high">Alta urgente</string>
-    <string name="ranges_invalid">Los rangos deben ir en aumento: baja urgente, baja, alta, alta urgente</string>
+    <string name="ranges_invalid">Los rangos deben ir en aumento y ser plausibles: baja urgente 40-90, baja 55-120, alta 120-300, alta urgente 150-400 mg/dL</string>
     <string name="save">Guardar e iniciar</string>
     <string name="settings">Ajustes</string>
     <string name="last_3h">Últimas 3 horas</string>
@@ -42,4 +42,8 @@
     <string name="back">Atrás</string>
     <string name="error_insecure">El http sin cifrar solo se permite en la red de casa (como 192.168.x.x). Usa https://</string>
     <string name="error_redirect">Nightscout redirige a %s: usa esa dirección</string>
+    <string name="error_http_secret">Con http sin cifrar usa un token con el rol readable, no el API secret</string>
+    <string name="notify_error">No se puede conectar con Nightscout. Abre la app para ver detalles</string>
+    <string name="secret_kept">Guardado. Déjalo vacío para conservarlo</string>
+    <string name="example">Ejemplo</string>
 </resources>

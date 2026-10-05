@@ -9,7 +9,7 @@
     <string name="low">Bassa</string>
     <string name="high">Alta</string>
     <string name="urgent_high">Alta urgente</string>
-    <string name="ranges_invalid">Le soglie devono crescere: bassa urgente, bassa, alta, alta urgente</string>
+    <string name="ranges_invalid">Le soglie devono crescere ed essere plausibili: bassa urgente 40-90, bassa 55-120, alta 120-300, alta urgente 150-400 mg/dL</string>
     <string name="save">Salva e avvia</string>
     <string name="settings">Impostazioni</string>
     <string name="last_3h">Ultime 3 ore</string>
@@ -42,4 +42,8 @@
     <string name="back">Indietro</string>
     <string name="error_insecure">L\'http semplice è permesso solo nella rete di casa (tipo 192.168.x.x). Usa https://</string>
     <string name="error_redirect">Nightscout rimanda a %s: usa quell\'indirizzo</string>
+    <string name="error_http_secret">Con http semplice usa un token con ruolo readable, non l\'API secret</string>
+    <string name="notify_error">Nightscout non raggiungibile. Apri l\'app per i dettagli</string>
+    <string name="secret_kept">Salvato. Lascia vuoto per mantenerlo</string>
+    <string name="example">Esempio</string>
 </resources>

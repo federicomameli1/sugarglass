@@ -9,7 +9,7 @@
     <string name="low">Baixa</string>
     <string name="high">Alta</string>
     <string name="urgent_high">Alta urgente</string>
-    <string name="ranges_invalid">As faixas devem ser crescentes: baixa urgente, baixa, alta, alta urgente</string>
+    <string name="ranges_invalid">As faixas devem ser crescentes e plausíveis: baixa urgente 40-90, baixa 55-120, alta 120-300, alta urgente 150-400 mg/dL</string>
     <string name="save">Salvar e iniciar</string>
     <string name="settings">Configurações</string>
     <string name="last_3h">Últimas 3 horas</string>
@@ -42,4 +42,8 @@
     <string name="back">Voltar</string>
     <string name="error_insecure">O http sem criptografia só é permitido na rede de casa (como 192.168.x.x). Use https://</string>
     <string name="error_redirect">O Nightscout redireciona para %s: use esse endereço</string>
+    <string name="error_http_secret">Com http sem criptografia use um token com a função readable, não o API secret</string>
+    <string name="notify_error">Não foi possível acessar o Nightscout. Abra o app para detalhes</string>
+    <string name="secret_kept">Salvo. Deixe vazio para manter</string>
+    <string name="example">Exemplo</string>
 </resources>

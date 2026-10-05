@@ -9,7 +9,7 @@
     <string name="low">Niedrig</string>
     <string name="high">Hoch</string>
     <string name="urgent_high">Kritisch hoch</string>
-    <string name="ranges_invalid">Die Grenzwerte müssen aufsteigen: kritisch niedrig, niedrig, hoch, kritisch hoch</string>
+    <string name="ranges_invalid">Die Grenzwerte müssen aufsteigen und plausibel sein: kritisch niedrig 40-90, niedrig 55-120, hoch 120-300, kritisch hoch 150-400 mg/dL</string>
     <string name="save">Speichern und starten</string>
     <string name="settings">Einstellungen</string>
     <string name="last_3h">Letzte 3 Stunden</string>
@@ -42,4 +42,8 @@
     <string name="back">Zurück</string>
     <string name="error_insecure">Unverschlüsseltes http ist nur im Heimnetz erlaubt (z. B. 192.168.x.x). Verwende https://</string>
     <string name="error_redirect">Nightscout leitet weiter zu %s: verwende diese Adresse</string>
+    <string name="error_http_secret">Über unverschlüsseltes http ein Token mit der Rolle readable verwenden, nicht das API-Secret</string>
+    <string name="notify_error">Nightscout nicht erreichbar. Details in der App</string>
+    <string name="secret_kept">Gespeichert. Leer lassen, um es zu behalten</string>
+    <string name="example">Beispiel</string>
 </resources>

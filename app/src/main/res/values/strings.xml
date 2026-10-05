@@ -10,7 +10,7 @@
     <string name="low">Low</string>
     <string name="high">High</string>
     <string name="urgent_high">Urgent high</string>
-    <string name="ranges_invalid">Ranges must go up: urgent low, low, high, urgent high</string>
+    <string name="ranges_invalid">Ranges must go up and stay plausible: urgent low 40-90, low 55-120, high 120-300, urgent high 150-400 mg/dL</string>
     <string name="save">Save and start</string>
     <string name="settings">Settings</string>
     <string name="last_3h">Last 3 hours</string>
@@ -43,4 +43,8 @@
     <string name="back">Back</string>
     <string name="error_insecure">Plain http is only allowed on your home network (like 192.168.x.x). Use https://</string>
     <string name="error_redirect">Nightscout redirects to %s: use that address</string>
+    <string name="error_http_secret">Over plain http use a token with the readable role, not the API secret</string>
+    <string name="notify_error">Can\'t reach Nightscout. Open the app for details</string>
+    <string name="secret_kept">Saved. Leave empty to keep it</string>
+    <string name="example">Example</string>
 </resources>

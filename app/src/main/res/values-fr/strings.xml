@@ -9,7 +9,7 @@
     <string name="low">Bas</string>
     <string name="high">Haut</string>
     <string name="urgent_high">Haut urgent</string>
-    <string name="ranges_invalid">Les seuils doivent être croissants : bas urgent, bas, haut, haut urgent</string>
+    <string name="ranges_invalid">Les seuils doivent être croissants et plausibles : bas urgent 40-90, bas 55-120, haut 120-300, haut urgent 150-400 mg/dL</string>
     <string name="save">Enregistrer et démarrer</string>
     <string name="settings">Réglages</string>
     <string name="last_3h">3 dernières heures</string>
@@ -42,4 +42,8 @@
     <string name="back">Retour</string>
     <string name="error_insecure">Le http simple n\'est autorisé que sur le réseau local (comme 192.168.x.x). Utilisez https://</string>
     <string name="error_redirect">Nightscout redirige vers %s : utilisez cette adresse</string>
+    <string name="error_http_secret">En http simple, utilisez un jeton avec le rôle readable, pas l\'API secret</string>
+    <string name="notify_error">Nightscout injoignable. Ouvrez l\'app pour les détails</string>
+    <string name="secret_kept">Enregistré. Laissez vide pour le garder</string>
+    <string name="example">Exemple</string>
 </resources>

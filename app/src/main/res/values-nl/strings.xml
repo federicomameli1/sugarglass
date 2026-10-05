@@ -9,7 +9,7 @@
     <string name="low">Laag</string>
     <string name="high">Hoog</string>
     <string name="urgent_high">Urgent hoog</string>
-    <string name="ranges_invalid">De grenzen moeten oplopen: urgent laag, laag, hoog, urgent hoog</string>
+    <string name="ranges_invalid">De grenzen moeten oplopen en plausibel zijn: urgent laag 40-90, laag 55-120, hoog 120-300, urgent hoog 150-400 mg/dL</string>
     <string name="save">Opslaan en starten</string>
     <string name="settings">Instellingen</string>
     <string name="last_3h">Laatste 3 uur</string>
@@ -42,4 +42,8 @@
     <string name="back">Terug</string>
     <string name="error_insecure">Onversleuteld http mag alleen op je thuisnetwerk (zoals 192.168.x.x). Gebruik https://</string>
     <string name="error_redirect">Nightscout verwijst door naar %s: gebruik dat adres</string>
+    <string name="error_http_secret">Gebruik bij onversleuteld http een token met de rol readable, niet het API secret</string>
+    <string name="notify_error">Nightscout niet bereikbaar. Open de app voor details</string>
+    <string name="secret_kept">Opgeslagen. Laat leeg om te behouden</string>
+    <string name="example">Voorbeeld</string>
 </resources>

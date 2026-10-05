@@ -133,13 +133,22 @@ public class MainActivity extends Activity {
 
     private void show() {
         List<Glucose.Reading> r = GlucoseService.readings;
-        if (r.isEmpty()) return;
+        if (r.isEmpty()) { // no data: clear what an earlier show() drew, or an old value would look current
+            value.setText("---");
+            value.setTextColor(secondary);
+            arrow.setImageBitmap(null);
+            arrow.setContentDescription(null);
+            info.setText(GlucoseService.failing ? getString(R.string.notify_error) : getString(R.string.status_waiting));
+            info.setTextColor(getColor(R.color.range_warn));
+            graph.setImageBitmap(null);
+            return;
+        }
         long now = System.currentTimeMillis();
         Glucose.Config c = GlucoseService.config(this);
         Glucose.Reading last = r.get(0);
         boolean stale = Glucose.stale(last, now);
         int hue = GlucoseService.color(this, last, now, c);
-        String delta = Glucose.delta(r, c);
+        String delta = stale ? "" : Glucose.delta(r, c); // an old trend is not a trend
 
         value.setText(Glucose.value(last.sgv, c));
         value.setTextColor(stale ? (primary & 0xFFFFFF) | 0x80000000 : primary);

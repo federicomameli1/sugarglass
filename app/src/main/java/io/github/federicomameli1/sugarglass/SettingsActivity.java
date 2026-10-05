@@ -57,6 +57,9 @@ public class SettingsActivity extends Activity {
     private FrameLayout preview;
     private ImageView previewPicture;
     private TextView previewInfo;
+    private CheckBox previewFixed;
+    private EditText previewBottom, previewTop;
+    private boolean previewMmol;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -115,23 +118,50 @@ public class SettingsActivity extends Activity {
         SharedPreferences p = GlucoseService.prefs(this);
         EditText url = field(R.string.nightscout_url, p.getString("url", ""),
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
-        EditText secret = field(R.string.nightscout_secret, p.getString("secret", ""),
+        // The stored secret is never put back in the field: someone holding the phone could otherwise
+        // point the address at their own server and have it sent there. Empty means "keep it".
+        EditText secret = field(R.string.nightscout_secret, "",
                 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        if (!p.getString("secret", "").isEmpty()) secret.setHint(R.string.secret_kept);
         button(R.string.save, () -> {
-            String address = url.getText().toString().trim();
-            if (!address.isEmpty() && !address.contains("://")) address = "https://" + address;
+            Glucose.Address typed = Glucose.cleanAddress(url.getText().toString());
+            if (typed == null) {
+                say(getString(R.string.error_insecure), getColor(R.color.range_urgent));
+                return;
+            }
+            String address = typed.url, newSecret = secret.getText().toString().trim();
+            if (newSecret.isEmpty()) newSecret = typed.secret; // a credential pasted inside the address
             url.setText(address);
             if (!address.isEmpty() && !Glucose.safeAddress(address)) {
                 say(getString(R.string.error_insecure), getColor(R.color.range_urgent));
                 return;
             }
-            p.edit().putString("url", address).putString("secret", secret.getText().toString().trim()).apply();
-            // Without the exemption Android may stop the service and refuse to restart it in the background
-            if (!getSystemService(PowerManager.class).isIgnoringBatteryOptimizations(getPackageName())) {
-                startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                        Uri.parse("package:" + getPackageName())));
+            // Empty keeps the saved secret, but only for the same site: a new site starts without one
+            String keep = Glucose.origin(address).equals(Glucose.origin(p.getString("url", "")))
+                    ? p.getString("secret", "") : "";
+            String chosen = newSecret.isEmpty() ? keep : newSecret;
+            if (!Glucose.secretAllowed(address, chosen)) {
+                say(getString(R.string.error_http_secret), getColor(R.color.range_urgent));
+                return;
             }
+            p.edit().putString("url", address).putString("secret", chosen).commit(); // stored before anything else can fail
+            secret.setText("");
+            secret.setHint(chosen.isEmpty() ? "" : getString(R.string.secret_kept));
             GlucoseService.start(this);
+            // Without the exemption Android may stop the service and refuse to restart it in the background.
+            // Guarded: some phones have no such screen
+            if (!getSystemService(PowerManager.class).isIgnoringBatteryOptimizations(getPackageName())) {
+                try {
+                    startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                            Uri.parse("package:" + getPackageName())));
+                } catch (RuntimeException e) {
+                    try {
+                        startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+                    } catch (RuntimeException ignored) {
+                        // nothing to open on this phone
+                    }
+                }
+            }
             Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
             say(getString(R.string.status_updating), secondary);
         });
@@ -268,6 +298,27 @@ public class SettingsActivity extends Activity {
         page = outer;
         page.addView(scale);
         scale.setVisibility(fixed.isChecked() ? View.VISIBLE : View.GONE);
+        // The preview follows the numbers as they are typed; they are stored only on Save
+        previewFixed = fixed;
+        previewBottom = bottom;
+        previewTop = top;
+        previewMmol = mmol;
+        android.text.TextWatcher redraw = new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence t, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence t, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable e) {
+                drawPreview();
+            }
+        };
+        bottom.addTextChangedListener(redraw);
+        top.addTextChangedListener(redraw);
         fixed.setOnCheckedChangeListener((box, on) -> {
             p.edit().putBoolean("fixed_scale", on).apply();
             scale.setVisibility(on ? View.VISIBLE : View.GONE);
@@ -411,11 +462,19 @@ public class SettingsActivity extends Activity {
         preview.setBackgroundResource(look == GlucoseService.LOOK_DARK ? R.drawable.glass_dark
                 : look == GlucoseService.LOOK_LIGHT ? R.drawable.glass_light : R.drawable.glass);
         java.util.List<Glucose.Reading> r = GlucoseService.readings;
-        if (r.isEmpty()) r = Fake.series(120, "FortyFiveUp", false, System.currentTimeMillis());
-        GlucoseWidget.Face face = GlucoseWidget.face(looked, r, preview.getWidth(), preview.getHeight(), false);
+        boolean sample = r.isEmpty(); // no readings yet: a made-up example, and it says so
+        if (sample) r = Fake.series(120, "FortyFiveUp", false, System.currentTimeMillis());
+        int[] fixed = null;
+        if (previewFixed != null && previewFixed.isChecked()) {
+            int from = toMgdl(previewBottom, previewMmol), to = toMgdl(previewTop, previewMmol);
+            fixed = from >= 20 && to <= 600 && from < to ? new int[]{from, to} : GlucoseService.fixedScale(this);
+            if (fixed == null) fixed = new int[]{Glucose.FIXED_MIN, Glucose.FIXED_MAX};
+        }
+        GlucoseWidget.Face face = GlucoseWidget.face(looked, r, preview.getWidth(), preview.getHeight(), false, fixed);
+        String tag = sample ? getString(R.string.example) + " · " : "";
         previewPicture.setImageBitmap(face.picture);
-        previewPicture.setContentDescription(face.description);
-        previewInfo.setText(face.info);
+        previewPicture.setContentDescription(tag + face.description);
+        previewInfo.setText(tag + face.info);
         previewInfo.setTextColor(face.infoColor);
     }
 
@@ -515,6 +574,8 @@ public class SettingsActivity extends Activity {
         EditText edit = new EditText(this);
         edit.setId(View.generateViewId());
         edit.setInputType(inputType);
+        // Not offered to password managers: the token would end up in their cloud
+        edit.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         edit.setText(text);
         edit.setTextColor(primary);
         name.setLabelFor(edit.getId());

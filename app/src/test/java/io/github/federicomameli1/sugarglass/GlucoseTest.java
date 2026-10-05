@@ -83,11 +83,58 @@ public class GlucoseTest {
         assertFalse(Glucose.safeAddress("http://192.168.1.1.evil.com"));
         assertFalse(Glucose.safeAddress("ftp://192.168.1.1"));
         assertFalse(Glucose.safeAddress("not a url"));
+        // the phone itself: any app on it could serve made-up readings on a local port
+        assertFalse(Glucose.safeAddress("http://localhost:17580"));
+        assertFalse(Glucose.safeAddress("http://127.0.0.1:17580"));
+        assertFalse(Glucose.safeAddress("http://[::1]:17580"));
+    }
+
+    @Test
+    public void apiSecretNeverOverPlainHttp() {
+        String token = "reader-0123456789abcdef";
+        assertTrue(Glucose.isToken(token));
+        assertFalse(Glucose.isToken("my-api-secret-123"));
+        assertTrue(Glucose.secretAllowed("http://192.168.1.20", token));
+        assertTrue(Glucose.secretAllowed("http://192.168.1.20", ""));
+        assertFalse(Glucose.secretAllowed("http://192.168.1.20", "my-api-secret-123"));
+        assertTrue(Glucose.secretAllowed("https://my.site", "my-api-secret-123"));
+    }
+
+    @Test
+    public void addressIsCleanedAndCredentialsMovedOut() {
+        Glucose.Address a = Glucose.cleanAddress("MySecret123@my.site/api/v1/");
+        assertEquals("https://my.site", a.url);
+        assertEquals("MySecret123", a.secret);
+        a = Glucose.cleanAddress("https://my.site:8443/ns/?token=reader-0123456789abcdef#x");
+        assertEquals("https://my.site:8443/ns", a.url);
+        assertEquals("reader-0123456789abcdef", a.secret);
+        a = Glucose.cleanAddress("  http://192.168.1.20:1337  ");
+        assertEquals("http://192.168.1.20:1337", a.url);
+        assertEquals("", a.secret);
+        assertEquals(Glucose.origin("https://my.site"), Glucose.origin("https://MY.site/other"));
+        assertFalse(Glucose.origin("https://my.site").equals(Glucose.origin("https://evil.site")));
+    }
+
+    @Test
+    public void lowAndHighAreNotNumbersAndHaveNoTrend() {
+        assertEquals("LOW", Glucose.value(39, MGDL));
+        assertEquals("HIGH", Glucose.value(401, MMOL));
+        assertEquals("", Glucose.delta(Arrays.asList(at(0, 39), at(5, 60)), MGDL));
+        assertEquals(Glucose.URGENT, Glucose.band(39, MGDL));
+        assertEquals(Glucose.URGENT, Glucose.band(401, MGDL));
     }
 
     @Test
     public void thresholdsMustGoUp() {
         assertFalse(new Glucose.Config(false, 70, 70, 180, 250).valid());
         assertFalse(new Glucose.Config(false, 55, 190, 180, 250).valid());
+        assertTrue(Glucose.Config.DEFAULT.valid());
+    }
+
+    @Test
+    public void thresholdsMustBePlausible() {
+        assertFalse(new Glucose.Config(false, 5, 70, 180, 250).valid());      // a dropped digit
+        assertFalse(new Glucose.Config(false, 55, 70, 180, 2500).valid());    // an extra one
+        assertFalse(new Glucose.Config(true, 991, 1261, 3243, 4505).valid()); // mg/dl typed as mmol/L
     }
 }
