@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import java.util.List;
 
 /**
- * Experimental, off unless turned on in Accessibility: a small pill with the value and arrow at the bottom of the lock
+ * Experimental, off unless turned on in Accessibility and in the settings: a small pill with the value and arrow at the bottom of the lock
  * screen. Apps cannot draw there; an accessibility overlay can. It reads nothing on screen
  * (no window content in its config), it only draws, and it never takes touches.
  */
@@ -108,7 +108,7 @@ public class LockPill extends AccessibilityService {
     private void check() {
         boolean locked = locked();
         List<Glucose.Reading> r = GlucoseService.readings;
-        if (!locked || pin || covered || r.isEmpty()) {
+        if (!locked || pin || covered || !GlucoseService.pillOn(this) || r.isEmpty()) {
             hide();
             return;
         }

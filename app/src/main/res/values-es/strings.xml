@@ -48,7 +48,9 @@
     <string name="example">Ejemplo</string>
     <string name="lock_pill">Píldora de Sugarglass en la pantalla de bloqueo</string>
     <string name="lock_pill_description">Muestra el último valor y la flecha en la parte inferior de la pantalla de bloqueo. Solo dibuja: no lee la pantalla ni pulsa nada.</string>
-    <string name="lock_pill_title">Píldora en la pantalla de bloqueo (experimental)</string>
-    <string name="lock_pill_note">Muestra el valor y la flecha abajo en la pantalla de bloqueo y quita de ahí la notificación. Activa \"Píldora de Sugarglass en la pantalla de bloqueo\" en Accesibilidad (en algunos móviles en Aplicaciones descargadas). Si aparece en gris, primero permite los ajustes restringidos desde el menú de Información de la app. Solo dibuja: no lee la pantalla.</string>
-    <string name="lock_pill_open">Abrir ajustes de accesibilidad</string>
+    <string name="lock_pill_title">Píldora en la pantalla de bloqueo</string>
+    <string name="lock_pill_note">Android no deja que ninguna app dibuje en la pantalla de bloqueo, así que la píldora funciona como servicio de accesibilidad: la primera vez activa \"Píldora de Sugarglass en la pantalla de bloqueo\" en Accesibilidad (en algunos móviles en Aplicaciones descargadas). Si aparece en gris, primero permite los ajustes restringidos desde el menú de Información de la app. Solo dibuja: no lee la pantalla. Mientras se muestra, la notificación no aparece en la pantalla de bloqueo.</string>
+    <string name="experimental">EXPERIMENTAL</string>
+    <string name="lock_pill_switch">Mostrar valor y flecha en la pantalla de bloqueo</string>
+    <string name="lock_pill_turn_on">Ahora activa aquí \"Píldora de Sugarglass en la pantalla de bloqueo\"</string>
 </resources>

@@ -48,7 +48,9 @@
     <string name="example">Przykład</string>
     <string name="lock_pill">Pigułka Sugarglass na ekranie blokady</string>
     <string name="lock_pill_description">Pokazuje ostatnią wartość i strzałkę na dole ekranu blokady. Tylko rysuje: nie czyta ekranu i niczego nie naciska.</string>
-    <string name="lock_pill_title">Pigułka na ekranie blokady (eksperymentalne)</string>
-    <string name="lock_pill_note">Pokazuje wartość i strzałkę na dole ekranu blokady i usuwa stamtąd powiadomienie. Włącz \"Pigułka Sugarglass na ekranie blokady\" w Ułatwieniach dostępu (czasem w Pobranych aplikacjach). Jeśli jest wyszarzone, najpierw zezwól na ustawienia z ograniczeniami w menu Informacji o aplikacji. Tylko rysuje: nie czyta ekranu.</string>
-    <string name="lock_pill_open">Otwórz ułatwienia dostępu</string>
+    <string name="lock_pill_title">Pigułka na ekranie blokady</string>
+    <string name="lock_pill_note">Android nie pozwala żadnej aplikacji rysować na ekranie blokady, więc pigułka działa jako usługa ułatwień dostępu: za pierwszym razem włącz \"Pigułka Sugarglass na ekranie blokady\" w Ułatwieniach dostępu (czasem w Pobranych aplikacjach). Jeśli jest wyszarzone, najpierw zezwól na ustawienia z ograniczeniami w menu Informacji o aplikacji. Tylko rysuje: nie czyta ekranu. Gdy jest widoczna, powiadomienie nie pojawia się na ekranie blokady.</string>
+    <string name="experimental">EKSPERYMENTALNE</string>
+    <string name="lock_pill_switch">Pokazuj wartość i strzałkę na ekranie blokady</string>
+    <string name="lock_pill_turn_on">Teraz włącz tutaj \"Pigułka Sugarglass na ekranie blokady\"</string>
 </resources>

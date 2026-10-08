@@ -48,7 +48,9 @@
     <string name="example">Exemplo</string>
     <string name="lock_pill">Pílula do Sugarglass na tela de bloqueio</string>
     <string name="lock_pill_description">Mostra o último valor e a seta na parte de baixo da tela de bloqueio. Só desenha: não lê a tela nem toca em nada.</string>
-    <string name="lock_pill_title">Pílula na tela de bloqueio (experimental)</string>
-    <string name="lock_pill_note">Mostra o valor e a seta embaixo na tela de bloqueio e tira a notificação de lá. Ative \"Pílula do Sugarglass na tela de bloqueio\" em Acessibilidade (em alguns celulares em Apps baixados). Se estiver cinza, primeiro permita as configurações restritas no menu de Informações do app. Só desenha: não lê a tela.</string>
-    <string name="lock_pill_open">Abrir configurações de acessibilidade</string>
+    <string name="lock_pill_title">Pílula na tela de bloqueio</string>
+    <string name="lock_pill_note">O Android não deixa nenhum app desenhar na tela de bloqueio, então a pílula funciona como serviço de acessibilidade: na primeira vez, ative \"Pílula do Sugarglass na tela de bloqueio\" em Acessibilidade (em alguns celulares em Apps baixados). Se estiver cinza, primeiro permita as configurações restritas no menu de Informações do app. Só desenha: não lê a tela. Enquanto aparece, a notificação fica fora da tela de bloqueio.</string>
+    <string name="experimental">EXPERIMENTAL</string>
+    <string name="lock_pill_switch">Mostrar valor e seta na tela de bloqueio</string>
+    <string name="lock_pill_turn_on">Agora ative aqui \"Pílula do Sugarglass na tela de bloqueio\"</string>
 </resources>

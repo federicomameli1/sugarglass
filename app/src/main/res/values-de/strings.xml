@@ -48,7 +48,9 @@
     <string name="example">Beispiel</string>
     <string name="lock_pill">Sugarglass-Pille auf dem Sperrbildschirm</string>
     <string name="lock_pill_description">Zeigt den letzten Wert und den Pfeil unten auf dem Sperrbildschirm. Sie zeichnet nur: Sie liest den Bildschirm nicht und drückt nichts.</string>
-    <string name="lock_pill_title">Pille auf dem Sperrbildschirm (experimentell)</string>
-    <string name="lock_pill_note">Zeigt Wert und Pfeil unten auf dem Sperrbildschirm und nimmt die Benachrichtigung von dort weg. Aktiviere \"Sugarglass-Pille auf dem Sperrbildschirm\" unter Bedienungshilfen (manchmal unter Heruntergeladene Apps). Ist sie ausgegraut, erlaube zuerst eingeschränkte Einstellungen im Menü der App-Info. Sie zeichnet nur: Sie liest den Bildschirm nicht.</string>
-    <string name="lock_pill_open">Bedienungshilfen öffnen</string>
+    <string name="lock_pill_title">Pille auf dem Sperrbildschirm</string>
+    <string name="lock_pill_note">Android lässt keine App auf dem Sperrbildschirm zeichnen, deshalb läuft die Pille als Bedienungshilfe: Schalte beim ersten Mal \"Sugarglass-Pille auf dem Sperrbildschirm\" unter Bedienungshilfen ein (manchmal unter Heruntergeladene Apps). Ist sie ausgegraut, erlaube zuerst eingeschränkte Einstellungen im Menü der App-Info. Sie zeichnet nur: Sie liest den Bildschirm nicht. Solange sie angezeigt wird, bleibt die Benachrichtigung vom Sperrbildschirm fern.</string>
+    <string name="experimental">EXPERIMENTELL</string>
+    <string name="lock_pill_switch">Wert und Pfeil auf dem Sperrbildschirm zeigen</string>
+    <string name="lock_pill_turn_on">Jetzt hier \"Sugarglass-Pille auf dem Sperrbildschirm\" einschalten</string>
 </resources>

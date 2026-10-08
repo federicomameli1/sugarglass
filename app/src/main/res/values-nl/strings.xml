@@ -48,7 +48,9 @@
     <string name="example">Voorbeeld</string>
     <string name="lock_pill">Sugarglass-pil op het vergrendelscherm</string>
     <string name="lock_pill_description">Toont de laatste waarde en pijl onderaan het vergrendelscherm. Hij tekent alleen: hij leest het scherm niet en drukt nergens op.</string>
-    <string name="lock_pill_title">Pil op het vergrendelscherm (experimenteel)</string>
-    <string name="lock_pill_note">Toont waarde en pijl onderaan het vergrendelscherm en haalt de melding daar weg. Zet \"Sugarglass-pil op het vergrendelscherm\" aan bij Toegankelijkheid (soms onder Gedownloade apps). Is het grijs, sta dan eerst beperkte instellingen toe via het menu van App-info. Hij tekent alleen: hij leest het scherm niet.</string>
-    <string name="lock_pill_open">Toegankelijkheid openen</string>
+    <string name="lock_pill_title">Pil op het vergrendelscherm</string>
+    <string name="lock_pill_note">Android laat geen app op het vergrendelscherm tekenen, dus de pil werkt als toegankelijkheidsservice: zet de eerste keer \"Sugarglass-pil op het vergrendelscherm\" aan bij Toegankelijkheid (soms onder Gedownloade apps). Is het grijs, sta dan eerst beperkte instellingen toe via het menu van App-info. Hij tekent alleen: hij leest het scherm niet. Zolang hij zichtbaar is, blijft de melding van het vergrendelscherm af.</string>
+    <string name="experimental">EXPERIMENTEEL</string>
+    <string name="lock_pill_switch">Waarde en pijl op het vergrendelscherm tonen</string>
+    <string name="lock_pill_turn_on">Zet hier nu \"Sugarglass-pil op het vergrendelscherm\" aan</string>
 </resources>

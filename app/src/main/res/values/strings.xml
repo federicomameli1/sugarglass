@@ -49,7 +49,9 @@
     <string name="example">Example</string>
     <string name="lock_pill">Sugarglass lock screen pill</string>
     <string name="lock_pill_description">Shows the latest value and arrow at the bottom of the lock screen. It only draws: it does not read what is on screen or press anything.</string>
-    <string name="lock_pill_title">Lock screen pill (experimental)</string>
-    <string name="lock_pill_note">Shows the value and arrow at the bottom of the lock screen, and keeps the notification off it. Turn on \"Sugarglass lock screen pill\" in Accessibility (on some phones under Downloaded apps). If it is greyed out, first allow restricted settings from the app info menu. It only draws: it does not read the screen.</string>
-    <string name="lock_pill_open">Open accessibility settings</string>
+    <string name="lock_pill_title">Lock screen pill</string>
+    <string name="lock_pill_note">Android lets no app draw on the lock screen, so the pill runs as an accessibility service: the first time, switch on \"Sugarglass lock screen pill\" in Accessibility (on some phones under Downloaded apps). If it is greyed out, first allow restricted settings from the app info menu. It only draws: it does not read the screen. While it shows, the notification stays off the lock screen.</string>
+    <string name="experimental">EXPERIMENTAL</string>
+    <string name="lock_pill_switch">Show value and arrow on the lock screen</string>
+    <string name="lock_pill_turn_on">Now turn on \"Sugarglass lock screen pill\" here</string>
 </resources>

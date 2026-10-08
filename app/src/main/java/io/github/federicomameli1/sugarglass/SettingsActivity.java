@@ -60,6 +60,8 @@ public class SettingsActivity extends Activity {
     private CheckBox previewFixed;
     private EditText previewBottom, previewTop;
     private boolean previewMmol;
+    private CheckBox pillBox;
+    private boolean syncing; // the pill box is being set from code, not tapped
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -325,18 +327,37 @@ public class SettingsActivity extends Activity {
             applied();
             drawPreview();
         });
-        // The lock screen pill is switched on in Android's accessibility settings, not here
-        page.addView(label(R.string.lock_pill_title));
+        // Lock screen pill: its own switch here, but Android must also run it as an accessibility service,
+        // which only the user can turn on. The box shows on only when both are
+        LinearLayout pillTitle = new LinearLayout(this);
+        pillTitle.setGravity(Gravity.BOTTOM);
+        pillTitle.addView(label(R.string.lock_pill_title));
+        TextView experimental = text(11, getColor(R.color.range_warn));
+        experimental.setText(R.string.experimental);
+        experimental.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        experimental.setPadding(dp(8), 0, 0, dp(1));
+        pillTitle.addView(experimental);
+        page.addView(pillTitle);
+        pillBox = new CheckBox(this);
+        pillBox.setText(R.string.lock_pill_switch);
+        syncPill();
+        pillBox.setOnCheckedChangeListener((box, on) -> {
+            if (syncing) return;
+            p.edit().putBoolean("lock_pill", on).apply();
+            applied();
+            if (on && !GlucoseService.pill) {
+                Toast.makeText(this, R.string.lock_pill_turn_on, Toast.LENGTH_LONG).show();
+                try {
+                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                } catch (RuntimeException e) {
+                    // nothing to open on this phone
+                }
+            }
+        });
+        page.addView(pillBox);
         TextView pillNote = text(13, secondary);
         pillNote.setText(R.string.lock_pill_note);
         page.addView(pillNote);
-        button(R.string.lock_pill_open, () -> {
-            try {
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-            } catch (RuntimeException e) {
-                // nothing to open on this phone
-            }
-        });
 
         // Look, glow and switches already show while you change them; Save stores the typed scale and closes
         button(R.string.save_short, () -> {
@@ -500,6 +521,18 @@ public class SettingsActivity extends Activity {
     }
 
     /** Widgets and notification redraw with what was just saved. */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pillBox != null) syncPill(); // back from the accessibility settings
+    }
+
+    private void syncPill() {
+        syncing = true;
+        pillBox.setChecked(GlucoseService.pill && GlucoseService.pillOn(this));
+        syncing = false;
+    }
+
     private void applied() {
         GlucoseWidget.updateAll(this);
         GlucoseService.start(this);
