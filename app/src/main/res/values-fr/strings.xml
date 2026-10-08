@@ -46,4 +46,9 @@
     <string name="notify_error">Nightscout injoignable. Ouvrez l\'app pour les détails</string>
     <string name="secret_kept">Enregistré. Laissez vide pour le garder</string>
     <string name="example">Exemple</string>
+    <string name="lock_pill">Pastille Sugarglass sur l\'écran de verrouillage</string>
+    <string name="lock_pill_description">Affiche la dernière valeur et la flèche en bas de l\'écran de verrouillage. Elle ne fait que dessiner : elle ne lit pas l\'écran et n\'appuie sur rien.</string>
+    <string name="lock_pill_title">Pastille sur l\'écran de verrouillage (expérimental)</string>
+    <string name="lock_pill_note">Affiche la valeur et la flèche en bas de l\'écran de verrouillage, et en retire la notification. Activez « Pastille Sugarglass sur l\'écran de verrouillage » dans Accessibilité (parfois sous Applications téléchargées). Si c\'est grisé, autorisez d\'abord les paramètres restreints depuis le menu Infos sur l\'appli. Elle ne fait que dessiner : elle ne lit pas l\'écran.</string>
+    <string name="lock_pill_open">Ouvrir les paramètres d\'accessibilité</string>
 </resources>

@@ -15,6 +15,7 @@ A tiny Android app that shows your glucose from **Nightscout** as a glass-style 
 - **Readable graph.** Faint dashed lines mark your target range (you can hide them), and the scale either fits your data or stays fixed at a range you choose.
 - **Persistent notification** with value, trend arrow, 5-minute delta and age.
 - **Status bar number**, so you see your glucose without pulling the shade down.
+- **Lock screen pill** (experimental, off by default): value and coloured arrow at the bottom of the lock screen, between the torch and camera shortcuts. It hides when you open the PIN pad, unlock, or open the camera. Android lets no app draw there, so it uses an accessibility service: see Settings → Widget and graph in the app.
 - **mg/dL or mmol/L**, and your own urgent low / low / high / urgent high ranges.
 - **Light and dark**: follows the system, or pick one for the widget. On Android 12+ the glass picks up your wallpaper colours (Material You).
 - **Adjustable glow**, from off to vivid.
@@ -58,6 +59,7 @@ Sugarglass talks to your Nightscout site and nothing else. Your address and toke
 - If your site redirects somewhere else, Sugarglass stops and tells you the new address instead of following it with your credentials.
 - The settings are left out of Android's cloud backups and phone-to-phone transfers, so the token never leaves the phone; on a new phone you enter it again.
 - Prefer a token with only the `readable` role over the API secret: it can read your data but not change anything.
+- The lock screen pill is an accessibility service only because that is the one way to draw on the lock screen. It can't read what's on screen (no window content), never presses anything, and of other apps it only sees which one is in front, to step aside when the camera opens over the lock screen. It is off unless you turn it on.
 
 Permissions: internet (Nightscout), notifications, foreground service (to stay alive), start at boot, and the request to be excluded from battery optimisation.
 

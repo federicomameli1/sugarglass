@@ -47,4 +47,9 @@
     <string name="notify_error">Can\'t reach Nightscout. Open the app for details</string>
     <string name="secret_kept">Saved. Leave empty to keep it</string>
     <string name="example">Example</string>
+    <string name="lock_pill">Sugarglass lock screen pill</string>
+    <string name="lock_pill_description">Shows the latest value and arrow at the bottom of the lock screen. It only draws: it does not read what is on screen or press anything.</string>
+    <string name="lock_pill_title">Lock screen pill (experimental)</string>
+    <string name="lock_pill_note">Shows the value and arrow at the bottom of the lock screen, and keeps the notification off it. Turn on \"Sugarglass lock screen pill\" in Accessibility (on some phones under Downloaded apps). If it is greyed out, first allow restricted settings from the app info menu. It only draws: it does not read the screen.</string>
+    <string name="lock_pill_open">Open accessibility settings</string>
 </resources>

@@ -46,4 +46,9 @@
     <string name="notify_error">Nightscout nicht erreichbar. Details in der App</string>
     <string name="secret_kept">Gespeichert. Leer lassen, um es zu behalten</string>
     <string name="example">Beispiel</string>
+    <string name="lock_pill">Sugarglass-Pille auf dem Sperrbildschirm</string>
+    <string name="lock_pill_description">Zeigt den letzten Wert und den Pfeil unten auf dem Sperrbildschirm. Sie zeichnet nur: Sie liest den Bildschirm nicht und drückt nichts.</string>
+    <string name="lock_pill_title">Pille auf dem Sperrbildschirm (experimentell)</string>
+    <string name="lock_pill_note">Zeigt Wert und Pfeil unten auf dem Sperrbildschirm und nimmt die Benachrichtigung von dort weg. Aktiviere \"Sugarglass-Pille auf dem Sperrbildschirm\" unter Bedienungshilfen (manchmal unter Heruntergeladene Apps). Ist sie ausgegraut, erlaube zuerst eingeschränkte Einstellungen im Menü der App-Info. Sie zeichnet nur: Sie liest den Bildschirm nicht.</string>
+    <string name="lock_pill_open">Bedienungshilfen öffnen</string>
 </resources>

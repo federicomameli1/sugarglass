@@ -46,4 +46,9 @@
     <string name="notify_error">Nightscout niet bereikbaar. Open de app voor details</string>
     <string name="secret_kept">Opgeslagen. Laat leeg om te behouden</string>
     <string name="example">Voorbeeld</string>
+    <string name="lock_pill">Sugarglass-pil op het vergrendelscherm</string>
+    <string name="lock_pill_description">Toont de laatste waarde en pijl onderaan het vergrendelscherm. Hij tekent alleen: hij leest het scherm niet en drukt nergens op.</string>
+    <string name="lock_pill_title">Pil op het vergrendelscherm (experimenteel)</string>
+    <string name="lock_pill_note">Toont waarde en pijl onderaan het vergrendelscherm en haalt de melding daar weg. Zet \"Sugarglass-pil op het vergrendelscherm\" aan bij Toegankelijkheid (soms onder Gedownloade apps). Is het grijs, sta dan eerst beperkte instellingen toe via het menu van App-info. Hij tekent alleen: hij leest het scherm niet.</string>
+    <string name="lock_pill_open">Toegankelijkheid openen</string>
 </resources>

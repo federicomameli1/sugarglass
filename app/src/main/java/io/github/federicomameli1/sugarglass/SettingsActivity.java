@@ -325,6 +325,19 @@ public class SettingsActivity extends Activity {
             applied();
             drawPreview();
         });
+        // The lock screen pill is switched on in Android's accessibility settings, not here
+        page.addView(label(R.string.lock_pill_title));
+        TextView pillNote = text(13, secondary);
+        pillNote.setText(R.string.lock_pill_note);
+        page.addView(pillNote);
+        button(R.string.lock_pill_open, () -> {
+            try {
+                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+            } catch (RuntimeException e) {
+                // nothing to open on this phone
+            }
+        });
+
         // Look, glow and switches already show while you change them; Save stores the typed scale and closes
         button(R.string.save_short, () -> {
             if (fixed.isChecked()) {

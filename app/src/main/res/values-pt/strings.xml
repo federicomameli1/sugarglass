@@ -46,4 +46,9 @@
     <string name="notify_error">Não foi possível acessar o Nightscout. Abra o app para detalhes</string>
     <string name="secret_kept">Salvo. Deixe vazio para manter</string>
     <string name="example">Exemplo</string>
+    <string name="lock_pill">Pílula do Sugarglass na tela de bloqueio</string>
+    <string name="lock_pill_description">Mostra o último valor e a seta na parte de baixo da tela de bloqueio. Só desenha: não lê a tela nem toca em nada.</string>
+    <string name="lock_pill_title">Pílula na tela de bloqueio (experimental)</string>
+    <string name="lock_pill_note">Mostra o valor e a seta embaixo na tela de bloqueio e tira a notificação de lá. Ative \"Pílula do Sugarglass na tela de bloqueio\" em Acessibilidade (em alguns celulares em Apps baixados). Se estiver cinza, primeiro permita as configurações restritas no menu de Informações do app. Só desenha: não lê a tela.</string>
+    <string name="lock_pill_open">Abrir configurações de acessibilidade</string>
 </resources>

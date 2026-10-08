@@ -53,5 +53,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+        <!-- Experimental lock screen pill: an accessibility service only so it may draw there -->
+        <service
+            android:name=".LockPill"
+            android:exported="false"
+            android:label="@string/lock_pill"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/lock_pill" />
+        </service>
     </application>
 </manifest>

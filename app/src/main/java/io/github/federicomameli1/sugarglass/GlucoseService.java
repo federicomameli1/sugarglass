@@ -67,6 +67,8 @@ public class GlucoseService extends Service {
     static volatile String status = "";
     /** Whether the last fetch failed, so the notification can say so without quoting the error. */
     static volatile boolean failing;
+    /** Set by the lock screen pill while it runs: then the notification stays off the lock screen. */
+    static volatile boolean pill;
     /** What the notification last showed that matters, so a dark screen isn't woken for an unchanged value. */
     private volatile String shown = "";
 
@@ -355,7 +357,7 @@ public class GlucoseService extends Service {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setShowWhen(false)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setVisibility(pill ? Notification.VISIBILITY_SECRET : Notification.VISIBILITY_PUBLIC)
                 .setContentIntent(PendingIntent.getActivity(this, 0,
                         new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
         List<Glucose.Reading> r = readings;

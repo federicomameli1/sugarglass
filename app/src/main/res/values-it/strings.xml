@@ -46,4 +46,9 @@
     <string name="notify_error">Nightscout non raggiungibile. Apri l\'app per i dettagli</string>
     <string name="secret_kept">Salvato. Lascia vuoto per mantenerlo</string>
     <string name="example">Esempio</string>
+    <string name="lock_pill">Pillola Sugarglass sulla schermata di blocco</string>
+    <string name="lock_pill_description">Mostra l\'ultimo valore e la freccia in basso sulla schermata di blocco. Disegna e basta: non legge cosa c\'è sullo schermo e non preme nulla.</string>
+    <string name="lock_pill_title">Pillola sulla schermata di blocco (sperimentale)</string>
+    <string name="lock_pill_note">Mostra valore e freccia in basso sulla schermata di blocco, e toglie da lì la notifica. Attiva \"Pillola Sugarglass sulla schermata di blocco\" in Accessibilità (su alcuni telefoni sotto App scaricate). Se è grigia, prima consenti le impostazioni con restrizioni dal menu di Info app. Disegna e basta: non legge lo schermo.</string>
+    <string name="lock_pill_open">Apri impostazioni di accessibilità</string>
 </resources>

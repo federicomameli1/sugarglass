@@ -46,4 +46,9 @@
     <string name="notify_error">No se puede conectar con Nightscout. Abre la app para ver detalles</string>
     <string name="secret_kept">Guardado. Déjalo vacío para conservarlo</string>
     <string name="example">Ejemplo</string>
+    <string name="lock_pill">Píldora de Sugarglass en la pantalla de bloqueo</string>
+    <string name="lock_pill_description">Muestra el último valor y la flecha en la parte inferior de la pantalla de bloqueo. Solo dibuja: no lee la pantalla ni pulsa nada.</string>
+    <string name="lock_pill_title">Píldora en la pantalla de bloqueo (experimental)</string>
+    <string name="lock_pill_note">Muestra el valor y la flecha abajo en la pantalla de bloqueo y quita de ahí la notificación. Activa \"Píldora de Sugarglass en la pantalla de bloqueo\" en Accesibilidad (en algunos móviles en Aplicaciones descargadas). Si aparece en gris, primero permite los ajustes restringidos desde el menú de Información de la app. Solo dibuja: no lee la pantalla.</string>
+    <string name="lock_pill_open">Abrir ajustes de accesibilidad</string>
 </resources>
