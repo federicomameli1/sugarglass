@@ -3,7 +3,7 @@
 A tiny Android app that shows your glucose from **Nightscout** as a glass-style home screen widget, a persistent notification and a number in the status bar. Nothing else.
 
 <p align="center">
-  <img src="docs/widgets.png" width="760" alt="The widget in dark and light mode: glucose value and trend arrow over a 3-hour line that blurs behind the number, with a green glow for in range">
+  <img src="docs/widgets.png" width="760" alt="The widget in dark and light mode: glucose value and trend arrow over a 3-hour line that blurs behind the number, dashed target range lines and a green glow for in range">
 </p>
 
 <h3 align="center"><a href="https://github.com/federicomameli1/sugarglass/releases/latest/download/sugarglass.apk">⬇ Download Sugarglass for Android</a></h3>
