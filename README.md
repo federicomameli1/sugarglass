@@ -23,13 +23,16 @@ A tiny Android app that shows your glucose from **Nightscout** as a glass-style 
 
 What it deliberately does **not** do: alarms, treatments, uploading, statistics. Use your CGM app or xDrip+/AAPS for those. Sugarglass only reads.
 
-## Notification and app
+## Notification, lock screen and app
 
 <p align="center">
   <img src="docs/notification.png" width="440" alt="Persistent notification with the value as its icon: 133, rising, +6, 1 min ago">
 </p>
 <p align="center">
-  <img src="docs/app.png" width="560" alt="The app: large value with the last 3 hours, and the settings for Nightscout, units, ranges, glow and language">
+  <img src="docs/lockscreen.png" width="440" alt="The experimental lock screen pill: 94 and a green arrow at the bottom of the lock screen, between the torch and camera shortcuts">
+</p>
+<p align="center">
+  <img src="docs/app.png" width="560" alt="The app: large value with the last 3 hours, and the widget settings with a live preview, look, glow, range lines, fixed scale and the lock screen pill">
 </p>
 
 ## Install
